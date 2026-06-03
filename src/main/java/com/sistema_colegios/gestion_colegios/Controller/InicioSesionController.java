@@ -1,15 +1,13 @@
-package com.sistema_colegios.gestion_colegios.Controladores;
+package com.sistema_colegios.gestion_colegios.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @Controller
 public class InicioSesionController {
 
-    @GetMapping("/")    
-    public String info(){
+    @GetMapping("/")
+    public String mostrarLogin() {
         return "index";
     }
 

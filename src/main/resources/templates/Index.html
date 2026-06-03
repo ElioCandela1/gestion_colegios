@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" th:href="@{/reset.css}">
-<link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/reset.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
 
     <title>Inicio de Sesión</title>
-    
+
     <style>
-        body {        
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,7 +21,7 @@
             padding: 25px;
             border-radius: 10px;
             width: 320px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             color: #fff;
             height: 45vh;
         }
@@ -55,26 +56,32 @@
             border: none;
             display: block;
             margin: 0 auto;
-            
+
         }
     </style>
 </head>
+
 <body>
 
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
 
-        <form action="/login" method="post">
+        <form action="/auth/login" method="post">
             <label>Usuario</label>
 
-            <input type="text" name="usuario" required>
+            <input type="text" name="username" required>
 
             <label>Contraseña</label>
             <input type="password" name="password" required>
 
             <button type="submit">Ingresar</button>
         </form>
+
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
     </div>
 
 </body>
+
 </html>
