@@ -3,7 +3,7 @@ package com.sistema_colegios.gestion_colegios.Model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sistema_colegios.gestion_colegios.Model.Entity.Usuario;
+import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Repository.UsuarioRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -14,9 +14,9 @@ public class AuthService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario login(String username, String password, HttpSession session) {
+    public Usuarios login(String username, String password, HttpSession session) {
 
-        Usuario usuario = usuarioRepository
+        Usuarios usuario = usuarioRepository
                 .findByUsername(username)
                 .orElse(null);
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.sistema_colegios.gestion_colegios.Model.Entity.Usuario;
+import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Service.AuthService;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,7 +28,7 @@ public class AuthController {
             Model model,
             HttpSession session) {
 
-        Usuario usuario = authService.login(username, password, session);
+        Usuarios usuario = authService.login(username, password, session);
 
         if (usuario == null) {
             model.addAttribute("error", "Credenciales incorrectas");

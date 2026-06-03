@@ -1,5 +1,7 @@
 package com.sistema_colegios.gestion_colegios.Model.Entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,10 +11,11 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+public class Usuarios {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Integer idUsuario;
 
     @Column(unique = true, nullable = false)
@@ -24,6 +27,9 @@ public class Usuario {
     private String rol;
 
     private Boolean estado;
+
+    @Column(name = "ultimo_acceso")
+    private LocalDateTime ultimoAcceso;
 
     public Integer getIdUsuario() {
         return idUsuario;
