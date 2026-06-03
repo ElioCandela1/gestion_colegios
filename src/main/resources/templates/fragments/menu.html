@@ -1,0 +1,69 @@
+<div th:fragment="menu">
+
+    <div class="menu-header">
+
+        <figure>
+            <img src="/images/logo.png" alt="Logo del colegio" class="logo">
+        <!-- Marco circular con la primera letra del nombre -->
+        <svg width="100" height="100">
+            <!-- Círculo -->
+            <circle cx="50" cy="50" r="45" stroke="black" stroke-width="3" fill="#87CEEB" />
+
+            <!-- Texto centrado -->
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="40" fill="white"
+                th:text="${#strings.substring(session.usuarioLogeado.username,0,1)}">
+            </text>
+        </svg>
+        <figcaption>Icono o foto de usuario logeado</figcaption>
+        </figure>
+
+        <p th:text="${session.usuarioLogeado.username}"></p>
+        <p th:text="${session.usuarioLogeado.rol}"></p>
+
+    </div>
+
+    <div class="menu-body">
+
+        <ul class="menu-options">
+
+
+            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+                <a th:href="@{/pagos}">
+                    Pagos
+                </a>
+            </li>
+
+            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+                <a th:href="@{/matricula}">
+                    Matriculación
+                </a>
+            </li>
+
+            <li th:if="${session.usuarioLogeado.rol == 'DOCENTE'}">
+                <a th:href="@{/notas}">
+                    Registro de notas
+                </a>
+            </li>
+
+            <li th:if="${session.usuarioLogeado.rol == 'ALUMNO' or session.usuarioLogeado.rol == 'APODERADO'}">
+                <a th:href="@{/misnotas}">
+                    Mis notas
+                </a>
+            </li>
+
+            <li th:if="${session.usuarioLogeado.rol == 'ALUMNO' or session.usuarioLogeado.rol == 'APODERADO'}">
+                <a th:href="@{/mispagos}">
+                    Mis pagos
+                </a>
+            </li>
+
+            <li>
+                <a class="cerrar_sesion" th:href="@{/logout}">
+                    Cerrar sesión
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+</div>
