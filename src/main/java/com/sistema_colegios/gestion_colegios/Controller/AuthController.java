@@ -37,7 +37,7 @@ public class AuthController {
 
         session.setAttribute("usuarioLogeado", usuario);
         // Redirige a otra página después del login exitoso
-        return "redirect:/prueba";
+        return "redirect:/estudiantes/matricular";
     }
 
     @GetMapping("/logout")

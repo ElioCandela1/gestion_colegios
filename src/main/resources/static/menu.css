@@ -1,0 +1,189 @@
+/* =========================
+   MENU LATERAL
+========================= */
+
+.menu-header,
+.menu-body{
+    width:250px;
+}
+
+.menu-header{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:250px;
+    height:280px;
+
+    background:#00295A;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+}
+
+.menu-body{
+    position:fixed;
+
+    top:280px;
+    left:0;
+
+    width:250px;
+    height:calc(100vh - 280px);
+
+    background:#00295A;
+}
+
+/* =========================
+   USUARIO
+========================= */
+
+.menu-header figure{
+    margin:0;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.logo{
+    width:70px;
+    margin-bottom:15px;
+}
+
+/* ocultar texto de prueba */
+
+.menu-header figcaption{
+    display:none;
+}
+
+/* círculo del usuario */
+
+.menu-header svg{
+    margin-bottom:15px;
+}
+
+.menu-header circle{
+    fill:#33C52E;
+    stroke:none;
+}
+
+.menu-header text{
+    font-weight:bold;
+}
+
+.menu-header p:first-of-type{
+    font-size:1.3rem;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.menu-header p:last-of-type{
+    opacity:.9;
+    font-size:1rem;
+}
+
+/* =========================
+   OPCIONES
+========================= */
+
+.menu-options{
+    list-style:none;
+
+    display:flex;
+    flex-direction:column;
+
+    height:100%;
+
+    padding:0;
+}
+
+.menu-options li{
+    width:100%;
+}
+
+.menu-options li a{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-decoration:none;
+
+    color:white;
+
+    font-size:1.1rem;
+
+    font-weight: 500;
+
+    height:60px;
+
+    transition:.2s;
+}
+
+/* hover */
+
+.menu-options li a:hover{
+    background:#33C52E;
+}
+
+/* opción activa */
+
+.menu-options li.active a{
+    background:#33C52E;
+}
+
+/* =========================
+   CERRAR SESION
+========================= */
+
+.menu-options li:last-child{
+
+    margin-top:auto;
+
+    position:absolute;
+
+    bottom:0;
+
+    width:100%;
+}
+
+.cerrar_sesion{
+
+    background:#33C52E;
+
+    height:70px !important;
+
+    font-size:1.3rem !important;
+}
+
+.cerrar_sesion:hover{
+    filter:brightness(0.95);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+    .menu-header,
+    .menu-body{
+        position:relative;
+        width:100%;
+    }
+
+    .menu-body{
+        height:auto;
+        top:0;
+    }
+
+    .menu-options li:last-child{
+        position:relative;
+    }
+}

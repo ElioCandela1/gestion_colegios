@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matricular Estudiante</title>
+
+    <link rel="stylesheet" th:href="@{/reset.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/matricular.css}">
+    <link rel="stylesheet" th:href="@{/menu.css}">
+</head>
+
+<body>
+
+    <!-- Menú lateral -->
+    <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <!-- FORMULARIO -->
+    <main id="matricular-content">
+
+        <h1>Matrícula 2026</h1>
+
+        <div class="card-form">
+
+            <h2>Registro de Matrícula</h2>
+
+            <form th:action="@{/estudiantes/matricular}" method="post">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="codigo">Código de Estudiante</label>
+                        <input type="text" id="codigo" name="codigo" placeholder="A15439">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Antonio">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="primerApellido">Primer Apellido</label>
+                        <input type="text" id="primerApellido" name="primerApellido" placeholder="Ej: Rodríguez">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="segundoApellido">Segundo Apellido</label>
+                        <input type="text" id="segundoApellido" name="segundoApellido" placeholder="Ej: Sánchez">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dni">DNI</label>
+                        <input type="text" id="dni" name="dni" maxlength="8" placeholder="Ej: 72394456">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Ej: Av. Principal 123">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="telefono" name="telefono" placeholder="Ej: 987654321">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correo">Correo Electrónico</label>
+                        <input type="email" id="correo" name="correo" placeholder="Ej: juan.rodriguez@ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="grado">Grado</label>
+                        <select id="grado" name="grado">
+                            <option>Seleccione Grado</option>
+                            <option>1°</option>
+                            <option>2°</option>
+                            <option>3°</option>
+                            <option>4°</option>
+                            <option>5°</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seccion">Sección</label>
+                        <select id="seccion" name="seccion">
+                            <option>Seleccione Sección</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaNacimiento">
+                            Fecha de Nacimiento
+                        </label>
+
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaMatricula">
+                            Fecha de Matrícula
+                        </label>
+
+                        <input type="date" id="fechaMatricula" name="fechaMatricula">
+                    </div>
+
+                    <div class="form-group estado-group">
+
+                        <label>Estado</label>
+
+                        <div class="switch-container">
+
+                            <label class="switch">
+                                <input type="checkbox" name="activo" checked>
+                                <span class="slider"></span>
+                            </label>
+
+                            <span>Activo</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="acciones">
+
+                    <button type="button" class="cancelar">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="guardar">
+                        Guardar
+                    </button>
+
+                    <button type="button" class="agregar-estudiante">
+                        Nuevo Estudiante
+                    </button>
+
+                    <button type="button" class="agregar-apoderado">
+                        Agregar Apoderado
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+    <!-- TABLA -->
+    <section id="lista-estudiantes">
+
+        <div class="card-table">
+
+            <h2>Estudiantes Matriculados</h2>
+
+            <div class="toolbar">
+
+                <div class="busqueda">
+
+                    <input type="text" placeholder="Buscar por nombre, apellido o código">
+
+                </div>
+
+                <div class="filtro">
+
+                    <select>
+                        <option>Todos los grados</option>
+                        <option>1°</option>
+                        <option>2°</option>
+                        <option>3°</option>
+                        <option>4°</option>
+                        <option>5°</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Grado</th>
+                        <th>Sección</th>
+                        <th>Fecha de matrícula</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>A15438</td>
+                        <td>Juan José</td>
+                        <td>Quispe Mamani</td>
+                        <td>1°</td>
+                        <td>A</td>
+                        <td>12/03/2026</td>
+                        <td>Activo</td>
+                        <td>✏️ 🗑️</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</body>
+
+</html>

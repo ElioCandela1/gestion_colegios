@@ -1,0 +1,296 @@
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+    min-height:100vh;
+}
+
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+
+#matricular-content,
+#lista-estudiantes{
+    margin-left:270px;
+    margin-right:30px;
+}
+
+#matricular-content{
+    padding-top:10px;
+}
+
+#matricular-content h1{
+    color:#33C52E;
+    font-size:2.5rem;
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+/* =========================
+   TARJETAS
+========================= */
+
+.card-form,
+.card-table{
+    background:#00295A;
+    border-radius:20px;
+    padding:30px;
+}
+
+.card-table{
+    margin-top:30px;
+    margin-bottom:30px;
+}
+
+.card-form h2,
+.card-table h2{
+    color:white;
+    margin-bottom:25px;
+    font-size:1.5rem;
+}
+
+/* =========================
+   FORMULARIO
+========================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    color:white;
+    margin-bottom:8px;
+    font-size:0.9rem;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:9px 16px;
+    border:none;
+    border-radius:10px;
+    background:#f4f4f4;
+    font-size:1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    outline:3px solid #33C52E;
+}
+
+/* =========================
+   SWITCH
+========================= */
+
+.switch-container{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:10px;
+}
+
+.switch{
+    position:relative;
+    display:inline-block;
+    width:60px;
+    height:32px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    cursor:pointer;
+    inset:0;
+    background:#ccc;
+    border-radius:50px;
+    transition:.3s;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    height:24px;
+    width:24px;
+    left:4px;
+    top:4px;
+    background:white;
+    border-radius:50%;
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#33C52E;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(28px);
+}
+
+.switch-container span{
+    color:white;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.acciones{
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:30px;
+}
+
+.acciones button{
+    background:#33C52E;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:0.95rem;
+    font-weight:600;
+    transition:.2s;
+}
+
+.acciones button:hover{
+    transform:translateY(-2px);
+    opacity:.95;
+}
+
+/* =========================
+   TOOLBAR TABLA
+========================= */
+
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    gap:20px;
+}
+
+.busqueda{
+    flex:1;
+}
+
+.busqueda input{
+    width:100%;
+    max-width:420px;
+    padding:14px 18px;
+    border:none;
+    border-radius:25px;
+    background:#f4f4f4;
+}
+
+.filtro select{
+    padding:14px 18px;
+    border:none;
+    border-radius:10px;
+    background:#f4f4f4;
+    min-width:220px;
+}
+
+/* =========================
+   TABLA
+========================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+thead{
+    background:#e9e9e9;
+}
+
+th{
+    padding:15px;
+    text-align:left;
+    font-weight:600;
+}
+
+td{
+    padding:15px;
+    border-top:1px solid #ddd;
+}
+
+tbody tr:hover{
+    background:#f8f8f8;
+}
+
+/* =========================
+   ESTADOS
+========================= */
+
+.estado-activo{
+    color:#33C52E;
+    font-weight:600;
+}
+
+.estado-inactivo{
+    color:#d32f2f;
+    font-weight:600;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1200px){
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:768px){
+
+    #matricular-content,
+    #lista-estudiantes{
+        margin-left:20px;
+        margin-right:20px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .acciones{
+        flex-direction:column;
+    }
+
+    .acciones button{
+        width:100%;
+    }
+}

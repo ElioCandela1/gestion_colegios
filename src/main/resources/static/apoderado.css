@@ -1,0 +1,182 @@
+/* ==========================
+   GENERAL
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+}
+
+/* ==========================
+   CONTENIDO
+========================== */
+
+#apoderado-content{
+    margin-left:320px;
+    padding:30px;
+}
+
+#apoderado-content h1{
+    color:#33C52E;
+    font-size:2.3rem;
+    margin-bottom:25px;
+}
+
+/* ==========================
+   CARD
+========================== */
+
+.card-form{
+    background:#00295A;
+    padding:35px;
+    border-radius:20px;
+}
+
+.card-form h2{
+    color:white;
+    margin-bottom:30px;
+}
+
+/* ==========================
+   FORM GRID
+========================== */
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(280px,1fr));
+
+    gap:25px;
+}
+
+/* ==========================
+   CAMPOS
+========================== */
+
+.form-group{
+
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+
+    color:white;
+
+    margin-bottom:8px;
+
+    font-weight:500;
+}
+
+.form-group input,
+.form-group select{
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:white;
+
+    font-size:15px;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+
+    outline:3px solid #33C52E;
+}
+
+/* ==========================
+   BOTONES
+========================== */
+
+.acciones{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:15px;
+
+    margin-top:35px;
+}
+
+.acciones button{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:12px 24px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.acciones button:hover{
+    transform:translateY(-2px);
+}
+
+/* cancelar */
+
+.acciones button:nth-child(1){
+
+    background:#e0e0e0;
+
+    color:#333;
+}
+
+/* limpiar */
+
+.acciones button:nth-child(2){
+
+    background:#f4f4f4;
+
+    color:#00295A;
+}
+
+/* guardar */
+
+.acciones button:nth-child(3){
+
+    background:#33C52E;
+
+    color:white;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:768px){
+
+    #apoderado-content{
+
+        margin-left:20px;
+
+        padding:20px;
+    }
+
+    .acciones{
+
+        flex-direction:column;
+    }
+
+    .acciones button{
+
+        width:100%;
+    }
+}
