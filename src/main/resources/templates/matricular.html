@@ -26,7 +26,7 @@
 
             <h2>Registro de Matrícula</h2>
 
-            <form th:action="@{/estudiantes/matricular}" method="post">
+            <form th:action="@{/matriculas/matricular}" method="post">
 
                 <div class="form-grid">
 
@@ -74,11 +74,11 @@
                         <label for="grado">Grado</label>
                         <select id="grado" name="grado">
                             <option>Seleccione Grado</option>
-                            <option>1°</option>
-                            <option>2°</option>
-                            <option>3°</option>
-                            <option>4°</option>
-                            <option>5°</option>
+                            <option value="1">1°</option>
+                            <option value="2">2°</option>
+                            <option value="3">3°</option>
+                            <option value="4">4°</option>
+                            <option value="5">5°</option>
                         </select>
                     </div>
 
@@ -115,7 +115,7 @@
                         <div class="switch-container">
 
                             <label class="switch">
-                                <input type="checkbox" name="activo" checked>
+                                <input type="checkbox" name="estado" checked>
                                 <span class="slider"></span>
                             </label>
 
@@ -172,11 +172,11 @@
 
                     <select>
                         <option>Todos los grados</option>
-                        <option>1°</option>
-                        <option>2°</option>
-                        <option>3°</option>
-                        <option>4°</option>
-                        <option>5°</option>
+                        <option value="1">1°</option>
+                        <option value="2">2°</option>
+                        <option value="3">3°</option>
+                        <option value="4">4°</option>
+                        <option value="5">5°</option>
                     </select>
 
                 </div>

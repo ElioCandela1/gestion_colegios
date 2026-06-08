@@ -16,7 +16,7 @@ public class Matriculas extends AuditoriaEntity {
     @Column(name = "fecha_matricula")
     private LocalDate fechaMatricula;
 
-    private String estado;
+    private boolean estado;
 
     @Column(name = "anio_escolar")
     private Integer anioEscolar;
@@ -28,4 +28,78 @@ public class Matriculas extends AuditoriaEntity {
     @ManyToOne
     @JoinColumn(name = "id_seccion")
     private Secciones seccion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_grado")
+    private Grados grado;
+
+    public Matriculas() {
+    }
+
+    public Matriculas(LocalDate fechaMatricula, boolean estado, Integer anioEscolar, Estudiantes estudiante,
+            Secciones seccion, Grados grado) {
+        this.fechaMatricula = fechaMatricula;
+        this.estado = estado;
+        this.anioEscolar = anioEscolar;
+        this.estudiante = estudiante;
+        this.seccion = seccion;
+        this.grado = grado;
+    }
+
+    public Integer getIdMatricula() {
+        return idMatricula;
+    }
+
+    public void setIdMatricula(Integer idMatricula) {
+        this.idMatricula = idMatricula;
+    }
+
+    public LocalDate getFechaMatricula() {
+        return fechaMatricula;
+    }
+
+    public void setFechaMatricula(LocalDate fechaMatricula) {
+        this.fechaMatricula = fechaMatricula;
+    }
+
+    public boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
+
+    public Integer getAnioEscolar() {
+        return anioEscolar;
+    }
+
+    public void setAnioEscolar(Integer anioEscolar) {
+        this.anioEscolar = anioEscolar;
+    }
+
+    public Estudiantes getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiantes estudiante) {
+        this.estudiante = estudiante;
+    }
+
+    public Secciones getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(Secciones seccion) {
+        this.seccion = seccion;
+    }
+
+    public Grados getGrado() {
+        return grado;
+    }
+
+    public void setGrado(Grados grado) {
+        this.grado = grado;
+    }
+ 
 }

@@ -11,10 +11,14 @@ public class Apoderados extends AuditoriaEntity {
     @Column(name = "id_apoderado")
     private Integer idApoderado;
 
-    @Column(name = "nombres", nullable = false)
-    private String nombres;
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
 
-    private String apellidos;
+    @Column(name = "primer_apellido", nullable = false)
+    private String primerApellido;
+
+    @Column(name = "segundo_apellido")
+    private String segundoApellido;
 
     @Column(unique = true, nullable = false)
     private String dni;

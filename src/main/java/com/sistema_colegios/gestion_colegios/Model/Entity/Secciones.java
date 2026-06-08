@@ -19,4 +19,40 @@ public class Secciones {
     @ManyToOne
     @JoinColumn(name = "id_grado")
     private Grados grado;
+
+    
+
+    public Integer getIdSeccion() {
+        return idSeccion;
+    }
+
+    public void setIdSeccion(Integer idSeccion) {
+        this.idSeccion = idSeccion;
+    }
+
+    public String getNombreSeccion() {
+        return nombreSeccion;
+    }
+
+    public void setNombreSeccion(String nombreSeccion) {
+        this.nombreSeccion = nombreSeccion;
+    }
+
+    public Integer getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(Integer capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public Grados getGrado() {
+        return grado;
+    }
+
+    public void setGrado(Grados grado) {
+        this.grado = grado;
+    }
+
+    
 }

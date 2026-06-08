@@ -55,12 +55,12 @@ public class Estudiantes extends AuditoriaEntity {
 
     
 
-    public Estudiantes(Integer idEstudiante, String codigo, String nombres, String primerApellido,
+    public Estudiantes(Integer idEstudiante, String codigo, String nombre, String primerApellido,
             String segundoApellido, String dni, LocalDate fechaNacimiento, String direccion, String telefono,
             String correo, Apoderados apoderado) {
         this.idEstudiante = idEstudiante;
         this.codigo = codigo;
-        this.nombre = nombres;
+        this.nombre = nombre;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
         this.dni = dni;
