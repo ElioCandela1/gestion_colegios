@@ -3,15 +3,20 @@ package com.sistema_colegios.gestion_colegios.Model.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Service;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
+import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Repository.EstudiantesRepository;
+import com.sistema_colegios.gestion_colegios.Model.Security.AuditorAwareImpl;
 
 @Service
 public class EstudiantesService {
     @Autowired
     private EstudiantesRepository estudiantesRepository;
+    @Autowired
+    private AuditorAware<Usuarios> auditorAware;
 
     public Estudiantes guardarEstudiante(Estudiantes estudiante) {
         return estudiantesRepository.save(estudiante);
@@ -29,8 +34,18 @@ public class EstudiantesService {
         return estudiantesRepository.findByDni(dni).orElse(null);
     }
 
-    public void eliminarEstudiante(Integer id) {
-        estudiantesRepository.deleteById(id);
+    public Estudiantes eliminarEstudiante(int id) {
+         // 1. Buscar el estudiante por ID
+        Estudiantes estudiante = estudiantesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
+
+        // 2. Modificar los campos
+        Usuarios usuarioActual = auditorAware.getCurrentAuditor().orElse(null);
+        estudiante.softDelete(usuarioActual);
+
+        // 3. Guardar nuevamente
+        return estudiantesRepository.save(estudiante);
+
     }
 
     public Estudiantes actualizarEstudiante(Estudiantes estudiante) {

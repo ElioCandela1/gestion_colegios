@@ -15,4 +15,6 @@ public interface EstudiantesRepository extends JpaRepository<Estudiantes, Intege
     Optional<Estudiantes> findByPrimerApellido(String primerApellido);
     Optional<Estudiantes> findByDni(String dni);
 
+    
+
 }
