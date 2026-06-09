@@ -29,9 +29,8 @@
             <h2>Registro de Matrícula</h2>
 
             <!-- Formulario de búsqueda -->
-            <form th:action="@{/estudiantes/buscar}" method="get" class="busqueda">
-                <input type="hidden" name="parametro" value="dni" />
-                <input type="text" name="valor" placeholder="Ingrese DNI del estudiante..." />
+            <form th:action="@{/matriculas/buscar}" method="get" class="busqueda">
+                <input type="text" name="dni" placeholder="Ingrese DNI del estudiante..." maxlength="8" />
                 <button type="submit">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
@@ -39,38 +38,40 @@
 
             <!-- Formulario de matriculacion-->
 
-            <form th:action="@{/matriculas/matricular}" th:object="${estudiante}" th:if="${estudiante != null}"
-                method="post">
+            <form th:action="@{/matriculas/matricular}" th:object="${matricula}" method="post">
 
                 <div class="form-grid">
 
+                    <input type="hidden" th:field="*{idMatricula}">
+
                     <div class="form-group">
                         <label for="codigo">Código de Estudiante</label>
-                        <input type="text" id="codigo" name="codigo" placeholder="A15439" th:field="*{codigo}" readonly>
+                        <input type="text" id="codigo" name="estudiante.codigo" placeholder="A15439"
+                            th:field="*{estudiante.codigo}" readonly>
                     </div>
 
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Antonio" th:field="*{nombre}"
-                            readonly>
+                        <input type="text" id="nombre" name="estudiante.nombre" placeholder="Ej: Juan Antonio"
+                            th:field="*{estudiante.nombre}" readonly>
                     </div>
 
                     <div class="form-group">
                         <label for="primerApellido">Primer Apellido</label>
-                        <input type="text" id="primerApellido" name="primerApellido" placeholder="Ej: Rodríguez"
-                            th:field="*{primerApellido}" readonly>
+                        <input type="text" id="primerApellido" name="estudiante.primerApellido"
+                            placeholder="Ej: Rodríguez" th:field="*{estudiante.primerApellido}" readonly>
                     </div>
 
                     <div class="form-group">
                         <label for="segundoApellido">Segundo Apellido</label>
-                        <input type="text" id="segundoApellido" name="segundoApellido" placeholder="Ej: Sánchez"
-                            th:field="*{segundoApellido}" readonly>
+                        <input type="text" id="segundoApellido" name="estudiante.segundoApellido"
+                            placeholder="Ej: Sánchez" th:field="*{estudiante.segundoApellido}" readonly>
                     </div>
 
                     <div class="form-group">
                         <label for="dni">DNI</label>
-                        <input type="text" id="dni" name="dni" maxlength="8" placeholder="Ej: 72394456"
-                            th:field="*{dni}" readonly>
+                        <input type="text" id="dni" name="estudiante.dni" maxlength="8" placeholder="Ej: 72394456"
+                            th:field="*{estudiante.dni}" readonly>
                     </div>
 
                     <div class="form-group">
@@ -78,7 +79,8 @@
                             Fecha de Nacimiento
                         </label>
 
-                        <input type="text" th:value="${#temporals.format(estudiante.fechaNacimiento, 'dd/MM/yyyy')}"
+                        <input type="text"
+                            th:value="${#temporals.format(matricula.estudiante.fechaNacimiento, 'dd/MM/yyyy')}"
                             readonly>
 
                     </div>
@@ -97,7 +99,7 @@
 
                     <div class="form-group">
                         <label for="seccion">Sección</label>
-                        <select id="seccion" name="seccion">
+                        <select id="seccion" name="seccion.nombre">
                             <option>Seleccione Sección</option>
                             <option>A</option>
                             <option>B</option>
@@ -134,7 +136,7 @@
 
                 <div class="acciones">
 
-                    <button type="button" class="btn cancelar">
+                    <button type="reset" class="btn cancelar" onclick="window.location.href='/matriculas/matricular'">
                         Cancelar
                     </button>
 
@@ -220,9 +222,20 @@
                         <td th:text="${m.seccion.nombreSeccion}"></td>
                         <td th:text="${m.fechaMatricula}"></td>
                         <td th:text="${m.estado}"></td>
+
                         <td>
-                            <a th:href="@{/matriculas/editar/{id}(id=${m.estudiante.idEstudiante})}"><i
+
+
+                            <a th:href="@{/matriculas/editar/{id}(id=${m.idMatricula})}"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
+
+                            <a th:href="@{/matriculas/eliminar/{id}(id=${m.idMatricula})}"
+                                onclick="return confirm('¿Desea eliminar esta matricula?')" title="Eliminar">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </a>
+
                         </td>
                     </tr>
 

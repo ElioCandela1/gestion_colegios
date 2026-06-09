@@ -2,10 +2,10 @@ package com.sistema_colegios.gestion_colegios.Model.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Grados;
@@ -23,39 +23,47 @@ public class MatriculasService {
     @Autowired
     private SeccionesService seccionService;
 
-    public Matriculas matricularEstudiante(Estudiantes estudiante, 
-                                           Secciones seccion, 
-                                           Grados grado,
-                                           Integer anioEscolar,
-                                           LocalDate fechaMatricula,
-                                           boolean estado) {
-        // Verificar estudiante
-        if(estudianteService.obtenerEstudiantePorDni(estudiante.getDni()) == null) {
-            throw new RuntimeException("No existe el estudiante");
-        } else {
-            estudiante = estudianteService.obtenerEstudiantePorDni(estudiante.getDni());
-        }
+    public Matriculas matricularEstudiante(String dniEstudiante, Matriculas matricula) {
+    
+    // Verificar estudiante
+    Estudiantes estudiante = estudianteService.obtenerEstudiantePorDni(dniEstudiante);
+    if (estudiante == null) {
+        throw new RuntimeException("No existe el estudiante");
+    }
+    matricula.setEstudiante(estudiante);
 
-        // Verificar capacidad de la sección
-        if(!seccionService.verificarCapacidad(seccion)) {
-            throw new RuntimeException("No hay capacidad en la sección seleccionada.");
-        }
-
-        // Crear nueva matrícula
-        Matriculas matricula = new Matriculas();
-        matricula.setEstudiante(estudiante);
-        matricula.setSeccion(seccion);
-        matricula.setGrado(grado);
-        matricula.setAnioEscolar(anioEscolar);
-        matricula.setFechaMatricula(fechaMatricula);
-        matricula.setEstado(estado);
-
-        return matriculasRepository.save(matricula);
+    // Verificar capacidad de la sección
+    if (matricula.getSeccion() == null || !seccionService.verificarCapacidad(matricula.getSeccion())) {
+        throw new RuntimeException("No hay capacidad en la sección seleccionada.");
     }
 
-    public List<Matriculas> listarEstudiantesMatriculados(){
+    // Si viene con id, intentamos actualizar
+    if (matricula.getIdMatricula() != null) {
+        Matriculas matriculaExistente = matriculasRepository.findById(matricula.getIdMatricula())
+                .orElseThrow(() -> new RuntimeException("Matrícula no encontrada"));
+
+        // Copiar cambios
+        matriculaExistente.setEstudiante(matricula.getEstudiante());
+        matriculaExistente.setSeccion(matricula.getSeccion());
+        matriculaExistente.setGrado(matricula.getGrado());
+        matriculaExistente.setAnioEscolar(matricula.getAnioEscolar());
+        matriculaExistente.setFechaMatricula(matricula.getFechaMatricula());
+        matriculaExistente.setEstado(matricula.getEstado());
+
+        return matriculasRepository.save(matriculaExistente);
+    }
+
+    // Si no tiene id, es nueva matrícula
+    return matriculasRepository.save(matricula);
+}
+
+    public List<Matriculas> listarEstudiantesMatriculados() {
         return matriculasRepository.findAll();
-        
+
+    }
+
+    public Optional<Matriculas> obtenerMatriculaPorId(Integer id) {
+        return matriculasRepository.findById(id);
     }
 
 }
