@@ -3,22 +3,18 @@
     <div class="menu-header">
 
         <figure>
-        <!-- Marco circular con la primera letra del nombre -->
-        <svg width="150" height="150">
-            <!-- Círculo -->
-            <circle cx="75" cy="75" r="65" stroke="black" stroke-width="3" fill="#87CEEB" />
+            <!-- Marco circular con la primera letra del nombre -->
+            <svg width="150" height="150">
+                <!-- Círculo -->
+                <circle cx="75" cy="75" r="65" stroke="black" stroke-width="3" fill="#87CEEB" />
 
-            <!-- Texto centrado -->
-            <text x="50%" y="50%" 
-                  text-anchor="middle" 
-                  dominant-baseline="central" 
-                  font-size="90"
-                  font-weight="lighter" 
-                  fill="white"
-                th:text="${#strings.substring(session.usuarioLogeado.username.toUpperCase(),0,1)}">
-            </text>
-        </svg>
-        <figcaption>Icono o foto de usuario logeado</figcaption>
+                <!-- Texto centrado -->
+                <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="90"
+                    font-weight="lighter" fill="white"
+                    th:text="${#strings.substring(session.usuarioLogeado.username.toUpperCase(),0,1)}">
+                </text>
+            </svg>
+            <figcaption>Icono o foto de usuario logeado</figcaption>
         </figure>
 
         <p th:text="${session.usuarioLogeado.username}"></p>
@@ -46,6 +42,12 @@
             <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
                 <a th:href="@{/estudiantes/gestionEstudiantes}">
                     Gestion de Estudiantes
+                </a>
+            </li>
+
+            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+                <a th:href="@{/apoderados/gestionApoderados}">
+                    Gestion de Apoderados
                 </a>
             </li>
 
