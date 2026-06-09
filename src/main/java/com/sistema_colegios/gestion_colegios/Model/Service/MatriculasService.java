@@ -1,6 +1,7 @@
 package com.sistema_colegios.gestion_colegios.Model.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class MatriculasService {
                                            boolean estado) {
         // Verificar estudiante
         if(estudianteService.obtenerEstudiantePorDni(estudiante.getDni()) == null) {
-            estudianteService.guardarEstudiante(estudiante);
+            throw new RuntimeException("No existe el estudiante");
         } else {
             estudiante = estudianteService.obtenerEstudiantePorDni(estudiante.getDni());
         }
@@ -52,5 +53,9 @@ public class MatriculasService {
         return matriculasRepository.save(matricula);
     }
 
+    public List<Matriculas> listarEstudiantesMatriculados(){
+        return matriculasRepository.findAll();
+        
+    }
 
 }

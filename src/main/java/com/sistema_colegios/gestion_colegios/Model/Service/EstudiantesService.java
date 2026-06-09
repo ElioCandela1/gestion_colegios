@@ -1,6 +1,7 @@
 package com.sistema_colegios.gestion_colegios.Model.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
@@ -20,6 +21,10 @@ public class EstudiantesService {
 
     public Estudiantes guardarEstudiante(Estudiantes estudiante) {
         return estudiantesRepository.save(estudiante);
+    }
+
+    public Optional<Estudiantes> obtenerEstudiantePorId(int id){
+        return estudiantesRepository.findById(id);
     }
 
     public Estudiantes obtenerEstudiantePorCodigo(String codigo) {

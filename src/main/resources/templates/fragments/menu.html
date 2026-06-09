@@ -43,6 +43,12 @@
                 </a>
             </li>
 
+            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+                <a th:href="@{/estudiantes/gestionEstudiantes}">
+                    Gestion de Estudiantes
+                </a>
+            </li>
+
             <li th:if="${session.usuarioLogeado.rol == 'DOCENTE'}">
                 <a th:href="@{/notas}">
                     Registro de notas

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Estudiantes</title>
+
+    <link rel="stylesheet" th:href="@{/reset.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/matricular.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <main id="content">
+
+        <h1>Gestión de Estudiantes</h1>
+
+        <!-- FORMULARIO -->
+
+        <section class="card-form">
+
+            <h2 th:text="${estudiante.idEstudiante == null ? 'Nuevo Estudiante' : 'Editar Estudiante'}">
+                Nuevo Estudiante
+            </h2>
+
+            <form th:action="@{/estudiantes/guardar}" th:object="${estudiante}" method="post">
+
+                <input type="hidden" th:field="*{idEstudiante}">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Código</label>
+                        <input type="text" th:field="*{codigo}" placeholder="A15439" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" th:field="*{nombre}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Primer Apellido</label>
+                        <input type="text" th:field="*{primerApellido}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Segundo Apellido</label>
+                        <input type="text" th:field="*{segundoApellido}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>DNI</label>
+                        <input type="text" th:field="*{dni}" maxlength="8" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" th:field="*{fechaNacimiento}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dirección</label>
+                        <input type="text" th:field="*{direccion}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" th:field="*{telefono}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input type="email" th:field="*{correo}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apoderado</label>
+
+                        <select th:field="*{apoderado.idApoderado}">
+                            <option value="">Seleccione Apoderado</option>
+
+                            <option th:each="a : ${apoderados}" th:value="${a.idApoderado}"
+                                th:text="${a.nombre + ' ' + a.primerApellido}">
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="acciones">
+
+                    <a th:href="@{/estudiantes}" class="btn cancelar">
+                        Nuevo
+                    </a>
+
+                    <button type="submit" class="btn guardar">
+                        Guardar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+        <!-- TABLA -->
+
+        <section class="card-table">
+
+            <h2>Lista de Estudiantes</h2>
+
+            <div class="busqueda">
+
+                <form th:action="@{/estudiantes}" method="get">
+
+                    <input type="text" name="buscar" placeholder="Buscar estudiante">
+
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+
+                </form>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>DNI</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Apoderado</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="e : ${estudiantes}">
+
+                        <td th:text="${e.codigo}"></td>
+
+                        <td th:text="${e.nombre}"></td>
+
+                        <td th:text="${e.primerApellido + ' ' + e.segundoApellido}">
+                        </td>
+
+                        <td th:text="${e.dni}"></td>
+
+                        <td th:text="${e.telefono}"></td>
+
+                        <td th:text="${e.correo}"></td>
+
+                        <td th:text="${e.apoderado != null ?
+                                      e.apoderado.nombre :
+                                      'Sin apoderado'}">
+                        </td>
+
+                        <td>
+
+                            <a th:href="@{/estudiantes/editar/{id}(id=${e.idEstudiante})}" title="Editar">
+
+                                <i class="fa-solid fa-pen-to-square"></i>
+
+                            </a>
+
+                            <a th:href="@{/estudiantes/eliminar/{id}(id=${e.idEstudiante})}"
+                                onclick="return confirm('¿Desea eliminar este estudiante?')" title="Eliminar">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

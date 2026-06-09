@@ -14,7 +14,11 @@ public class Docentes extends AuditoriaEntity {
     @Column(name = "nombres", nullable = false)
     private String nombres;
 
-    private String apellidos;
+    @Column(name = "primer_apellido", nullable = false)
+    private String primerApellido;
+
+    @Column(name = "segundo_apellido")
+    private String segundoApellido;
 
     @Column(unique = true, nullable = false)
     private String dni;

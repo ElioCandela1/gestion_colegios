@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Apoderado</title>
+
+    <link rel="stylesheet" th:href="@{/apoderado.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <main id="apoderado-content">
+
+        <h1>Gestión de Apoderados</h1>
+
+        <div class="card-form">
+
+            <h2>Registrar Apoderado</h2>
+
+            <form th:action="@{/apoderados/guardar}"
+                  method="post">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="nombres">Nombres</label>
+                        <input type="text"
+                               id="nombres"
+                               name="nombres"
+                               placeholder="Ej: Juan Carlos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text"
+                               id="apellidos"
+                               name="apellidos"
+                               placeholder="Ej: Pérez Gómez"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dni">DNI</label>
+                        <input type="text"
+                               id="dni"
+                               name="dni"
+                               maxlength="8"
+                               placeholder="12345678"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text"
+                               id="telefono"
+                               name="telefono"
+                               maxlength="9"
+                               placeholder="987654321">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correo">Correo</label>
+                        <input type="email"
+                               id="correo"
+                               name="correo"
+                               placeholder="correo@ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parentesco">Parentesco</label>
+
+                        <select id="parentesco"
+                                name="parentesco"
+                                required>
+
+                            <option value="">
+                                Seleccione parentesco
+                            </option>
+
+                            <option value="PADRE">Padre</option>
+                            <option value="MADRE">Madre</option>
+                            <option value="ABUELO">Abuelo</option>
+                            <option value="ABUELA">Abuela</option>
+                            <option value="TIO">Tío</option>
+                            <option value="TIA">Tía</option>
+                            <option value="HERMANO">Hermano</option>
+                            <option value="HERMANA">Hermana</option>
+                            <option value="OTRO">Otro</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="acciones">
+
+                    <button type="button"
+                            onclick="history.back()">
+                        Cancelar
+                    </button>
+
+                    <button type="reset">
+                        Limpiar
+                    </button>
+
+                    <button type="submit">
+                        Guardar Apoderado
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

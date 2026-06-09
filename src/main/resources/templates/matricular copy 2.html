@@ -20,7 +20,7 @@
     <div th:replace="~{fragments/menu :: menu}"></div>
 
     <!-- FORMULARIO -->
-    <main id="content">
+    <main id="matricular-content">
 
         <h1>Matrícula 2026</h1>
 
@@ -28,59 +28,48 @@
 
             <h2>Registro de Matrícula</h2>
 
-            <!-- Formulario de búsqueda -->
-            <form th:action="@{/estudiantes/buscar}" method="get" class="busqueda">
-                <input type="hidden" name="parametro" value="dni" />
-                <input type="text" name="valor" placeholder="Ingrese DNI del estudiante..." />
-                <button type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </form>
-
-            <!-- Formulario de matriculacion-->
-
-            <form th:action="@{/matriculas/matricular}" th:object="${estudiante}" th:if="${estudiante != null}"
-                method="post">
+            <form th:action="@{/matriculas/matricular}" th:object="${estudiante}" method="post">
 
                 <div class="form-grid">
 
                     <div class="form-group">
                         <label for="codigo">Código de Estudiante</label>
-                        <input type="text" id="codigo" name="codigo" placeholder="A15439" th:field="*{codigo}" readonly>
+                        <input type="text" id="codigo" name="codigo" placeholder="A15439">
                     </div>
 
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Antonio" th:field="*{nombre}"
-                            readonly>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Antonio">
                     </div>
 
                     <div class="form-group">
                         <label for="primerApellido">Primer Apellido</label>
-                        <input type="text" id="primerApellido" name="primerApellido" placeholder="Ej: Rodríguez"
-                            th:field="*{primerApellido}" readonly>
+                        <input type="text" id="primerApellido" name="primerApellido" placeholder="Ej: Rodríguez">
                     </div>
 
                     <div class="form-group">
                         <label for="segundoApellido">Segundo Apellido</label>
-                        <input type="text" id="segundoApellido" name="segundoApellido" placeholder="Ej: Sánchez"
-                            th:field="*{segundoApellido}" readonly>
+                        <input type="text" id="segundoApellido" name="segundoApellido" placeholder="Ej: Sánchez">
                     </div>
 
                     <div class="form-group">
                         <label for="dni">DNI</label>
-                        <input type="text" id="dni" name="dni" maxlength="8" placeholder="Ej: 72394456"
-                            th:field="*{dni}" readonly>
+                        <input type="text" id="dni" name="dni" maxlength="8" placeholder="Ej: 72394456">
                     </div>
 
                     <div class="form-group">
-                        <label for="fechaNacimiento">
-                            Fecha de Nacimiento
-                        </label>
+                        <label for="direccion">Dirección</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Ej: Av. Principal 123">
+                    </div>
 
-                        <input type="text" th:value="${#temporals.format(estudiante.fechaNacimiento, 'dd/MM/yyyy')}"
-                            readonly>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="telefono" name="telefono" placeholder="Ej: 987654321">
+                    </div>
 
+                    <div class="form-group">
+                        <label for="correo">Correo Electrónico</label>
+                        <input type="email" id="correo" name="correo" placeholder="Ej: juan.rodriguez@ejemplo.com">
                     </div>
 
                     <div class="form-group">
@@ -103,6 +92,14 @@
                             <option>B</option>
                             <option>C</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaNacimiento">
+                            Fecha de Nacimiento
+                        </label>
+
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento">
                     </div>
 
                     <div class="form-group">
@@ -134,19 +131,19 @@
 
                 <div class="acciones">
 
-                    <button type="button" class="btn cancelar">
+                    <button type="button" class="cancelar">
                         Cancelar
                     </button>
 
-                    <button type="submit" class="btn guardar">
+                    <button type="submit" class="guardar">
                         Guardar
                     </button>
 
-                    <button type="button" class="btn agregar-estudiante">
+                    <button type="button" class="agregar-estudiante">
                         Nuevo Estudiante
                     </button>
 
-                    <button type="button" class="btn agregar-apoderado">
+                    <button type="button" class="agregar-apoderado">
                         Agregar Apoderado
                     </button>
 
@@ -229,8 +226,7 @@
                         <td th:text="${m.fechaMatricula}"></td>
                         <td th:text="${m.estado}"></td>
                         <td>
-                            <a th:href="@{/estudiantes/editar/{id}(id=${m.estudiante.idEstudiante})}"><i
-                                    class="fa-solid fa-pen-to-square"></i></a>
+                            <a th:href="@{/estudiantes/editar/{id}(id=${m.estudiante.idEstudiante})}"><i class="fa-solid fa-pen-to-square"></i></a>
                         </td>
                     </tr>
 

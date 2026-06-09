@@ -1,9 +1,12 @@
 package com.sistema_colegios.gestion_colegios.Model.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Apoderados;
+import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
 import com.sistema_colegios.gestion_colegios.Model.Repository.ApoderadosRepository;
 
 @Service
@@ -39,4 +42,7 @@ public class ApoderadosService {
         return apoderadosRepository.save(apoderados);
     }
     
+    public List<Apoderados> listarApoderados() {
+        return apoderadosRepository.findAll();
+    }
 }

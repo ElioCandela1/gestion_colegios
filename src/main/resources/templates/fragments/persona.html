@@ -1,0 +1,24 @@
+<div th:fragment="datosPersona">
+
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Antonio" th:field="*{nombre}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="primerApellido">Primer Apellido</label>
+        <input type="text" id="primerApellido" name="primerApellido" placeholder="Ej: Rodríguez"
+            th:field="*{primerApellido}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="segundoApellido">Segundo Apellido</label>
+        <input type="text" id="segundoApellido" name="segundoApellido" placeholder="Ej: Sánchez"
+            th:field="*{segundoApellido}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="dni">DNI</label>
+        <input type="text" id="dni" name="dni" maxlength="8" placeholder="Ej: 72394456" th:field="*{dni}" readonly>
+    </div>
+</div>

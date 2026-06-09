@@ -16,4 +16,30 @@ public class Grados {
 
     @Column(name = "nivel", nullable = false)
     private String nivel;
+
+    public Integer getIdGrado() {
+        return idGrado;
+    }
+
+    public void setIdGrado(Integer idGrado) {
+        this.idGrado = idGrado;
+    }
+
+    public String getNombreGrado() {
+        return nombreGrado;
+    }
+
+    public void setNombreGrado(String nombreGrado) {
+        this.nombreGrado = nombreGrado;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+
+    
 }
