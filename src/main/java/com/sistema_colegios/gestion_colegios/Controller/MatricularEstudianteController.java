@@ -49,11 +49,11 @@ public class MatricularEstudianteController {
             @RequestParam("estado") boolean estado,
             Model model) {
         matriculasService.matricularEstudiante(estudiante,
-                seccionesService.obtenerSeccionPorNombreYGrado(nombreSeccion, gradosService.obtenerGradoPorId(idGrado)), // Obtener la sección por su nombre y grado
-                gradosService.obtenerGradoPorId(idGrado), // Obtener el grado por su ID
-                fechaMatricula.getYear(), // Año escolar
-                fechaMatricula, // Fecha de la matricula
-                estado);
+                                               seccionesService.obtenerSeccionPorNombreYGrado(nombreSeccion, gradosService.obtenerGradoPorId(idGrado)), // Obtener la sección por su nombre y grado
+                                               gradosService.obtenerGradoPorId(idGrado), // Obtener el grado por su ID
+                                               fechaMatricula.getYear(), // Año escolar
+                                               fechaMatricula, // Fecha de la matricula
+                                               estado);
         model.addAttribute("mensaje", "Estudiante matriculado exitosamente");
         return "redirect:/matriculas/matricular";
     }
@@ -63,7 +63,7 @@ public class MatricularEstudianteController {
 
     // Editar una Matricula ... se debe modificar
     @GetMapping("/editar/{id}")
-    public String mostrarFormulario(@PathVariable Integer id, Model model, HttpSession session) {
+    public String editar(@PathVariable Integer id, Model model, HttpSession session) {
         Estudiantes estudiante = estudiantesService.obtenerEstudiantePorId(id)
                 .orElseThrow(() -> new RuntimeException("No encontrado"));
         model.addAttribute("estudiante", estudiante);

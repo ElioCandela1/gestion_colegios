@@ -142,14 +142,6 @@
                         Guardar
                     </button>
 
-                    <button type="button" class="btn agregar-estudiante">
-                        Nuevo Estudiante
-                    </button>
-
-                    <button type="button" class="btn agregar-apoderado">
-                        Agregar Apoderado
-                    </button>
-
                 </div>
 
             </form>
@@ -229,7 +221,7 @@
                         <td th:text="${m.fechaMatricula}"></td>
                         <td th:text="${m.estado}"></td>
                         <td>
-                            <a th:href="@{/estudiantes/editar/{id}(id=${m.estudiante.idEstudiante})}"><i
+                            <a th:href="@{/matriculas/editar/{id}(id=${m.estudiante.idEstudiante})}"><i
                                     class="fa-solid fa-pen-to-square"></i></a>
                         </td>
                     </tr>
