@@ -34,7 +34,7 @@
             </li>
 
             <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
-                <a th:href="@{/matricula}">
+                <a th:href="@{/matriculas/matricular}">
                     Matriculación
                 </a>
             </li>
@@ -48,6 +48,12 @@
             <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
                 <a th:href="@{/apoderados/gestionApoderados}">
                     Gestion de Apoderados
+                </a>
+            </li>
+
+            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+                <a th:href="@{/docentes/gestionDocentes}">
+                    Gestion de Docentes
                 </a>
             </li>
 

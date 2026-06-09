@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Docentes</title>
+
+    <link rel="stylesheet" th:href="@{/reset.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/matricular.css}">
+    <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <main id="content">
+
+        <h1>Gestión de Docentes</h1>
+
+        <div class="card-form">
+
+            <h2>Registro de Docente</h2>
+
+            <!-- BUSQUEDA -->
+
+            <form th:action="@{/docentes/buscar}" method="get" class="busqueda">
+
+                <input type="hidden" name="parametro" value="dni">
+
+                <input type="text" name="valor" placeholder="Ingrese DNI del docente">
+
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+            </form>
+
+            <!-- FORMULARIO -->
+
+            <form th:action="@{/docentes/guardar}" th:object="${docente}" method="post">
+
+                <input type="hidden" th:field="*{idDocente}">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>ID</label>
+                        <input type="text" th:value="${docente?.idDocente}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombres</label>
+                        <input type="text" th:field="*{nombres}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Primer Apellido</label>
+                        <input type="text" th:field="*{primerApellido}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Segundo Apellido</label>
+                        <input type="text" th:field="*{segundoApellido}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>DNI</label>
+                        <input type="text" maxlength="8" th:field="*{dni}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Especialidad</label>
+                        <input type="text" th:field="*{especialidad}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" maxlength="9" th:field="*{telefono}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input type="email" th:field="*{correo}">
+                    </div>
+
+                    <div class="form-group estado-group">
+
+                        <label>Estado</label>
+
+                        <div class="switch-container">
+
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+
+                            <span>Activo</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="acciones">
+
+                    <button type="reset" class="btn cancelar">
+                        Limpiar
+                    </button>
+
+                    <button type="submit" class="btn guardar">
+                        Guardar
+                    </button>
+
+                    <a th:href="@{/docentes}" class="btn agregar">
+                        Nuevo
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+    <!-- TABLA -->
+
+    <section id="listar">
+
+        <div class="card-table">
+
+            <h2>Listado de Docentes</h2>
+
+            <div class="toolbar">
+
+                <div class="busqueda">
+                    <input type="text" placeholder="Buscar docente">
+                </div>
+
+                <div class="filtro">
+                    <select name="curso" id="curso">
+                        <option value="">-- Selecciona curso --</option>
+                        <option value="comunicacion">Comunicación</option>
+                        <option value="matematica">Matemática</option>
+                        <option value="ciencia">Ciencia y Tecnología</option>
+                        <option value="personal-social">Personal Social</option>
+                        <option value="arte-cultura">Arte y Cultura</option>
+                        <option value="educacion-fisica">Educación Física</option>
+                        <option value="ingles">Inglés</option>
+                        <option value="religion">Religión / Valores</option>
+                    </select>
+                </div>
+
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>DNI</th>
+                        <th>Especialidad</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="d : ${docentes}">
+
+                        <td th:text="${d.idDocente}"></td>
+
+                        <td th:text="${d.nombres}"></td>
+
+                        <td th:text="${d.primerApellido + ' ' + d.segundoApellido}"></td>
+
+                        <td th:text="${d.dni}"></td>
+
+                        <td th:text="${d.especialidad}"></td>
+
+                        <td th:text="${d.telefono}"></td>
+
+                        <td th:text="${d.correo}"></td>
+
+                        <td>
+
+                            <a th:href="@{/docentes/editar/{id}(id=${d.idDocente})}">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+
+                            <a th:href="@{/docentes/eliminar/{id}(id=${d.idDocente})}"
+                                onclick="return confirm('¿Desea eliminar este docente?')">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</body>
+
+</html>
