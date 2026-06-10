@@ -274,6 +274,35 @@ tbody tr:hover{
 }
 
 /* =========================
+   PAGINACION
+========================= */
+.paginacion {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.paginacion a {
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 6px;
+    background: #f4f4f4;
+    color: #00295A;
+    border: 1px solid #ccc;
+}
+
+.paginacion a:hover {
+    background: #33C52E;
+    color: white;
+}
+
+.paginacion .activo {
+    background: #00295A;
+    color: white;
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
 

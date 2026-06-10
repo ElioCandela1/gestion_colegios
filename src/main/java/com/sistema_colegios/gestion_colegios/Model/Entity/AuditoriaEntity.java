@@ -43,11 +43,27 @@ public abstract class AuditoriaEntity {
     private LocalDateTime fechaEliminacion;
 
     @Column(name = "estado_registro")
-    private String estadoRegistro;
+    private boolean estadoRegistro = true;
+
+    
+
+    public AuditoriaEntity() {
+    }
+
+    public AuditoriaEntity(Usuarios creadoPor, Usuarios modificadoPor, Usuarios eliminadoPor,
+            LocalDateTime fechaCreacion, LocalDateTime fechaModificacion, LocalDateTime fechaEliminacion, boolean estadoRegistro) {
+        this.creadoPor = creadoPor;
+        this.modificadoPor = modificadoPor;
+        this.eliminadoPor = eliminadoPor;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaModificacion = fechaModificacion;
+        this.fechaEliminacion = fechaEliminacion;
+        this.estadoRegistro = estadoRegistro;
+    }
 
     public void softDelete(Usuarios usuarioActual){
 
-        this.estadoRegistro = "ELIMINADO";
+        this.estadoRegistro = false;
         this.fechaEliminacion = LocalDateTime.now();
         this.eliminadoPor = usuarioActual;
     }
@@ -101,13 +117,15 @@ public abstract class AuditoriaEntity {
         this.fechaEliminacion = fechaEliminacion;
     }
 
-    public String getEstadoRegistro() {
+    public boolean isEstadoRegistro() {
         return estadoRegistro;
     }
 
-    public void setEstadoRegistro(String estadoRegistro) {
+    public void setEstadoRegistro(boolean estadoRegistro) {
         this.estadoRegistro = estadoRegistro;
     }
+
+    
 
     
 }

@@ -36,7 +36,7 @@ public class EstudiantesService {
     }
 
     public Estudiantes obtenerEstudiantePorDni(String dni) {
-        return estudiantesRepository.findByDni(dni).orElse(null);
+        return estudiantesRepository.findByDni(dni).orElseThrow(()->new RuntimeException("No existe el estudiante con DNI: " + dni));
     }
 
     public Estudiantes eliminarEstudiante(int id) {
