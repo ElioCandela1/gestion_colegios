@@ -166,7 +166,6 @@ public class MatricularEstudianteController {
     }
 
     // Buscar estudiante
-
     @GetMapping("/buscar")
     public String buscarEstudiante(@RequestParam String dni, RedirectAttributes redirectAttributes) {
 
@@ -189,6 +188,7 @@ public class MatricularEstudianteController {
 
         if (matriculaExistente.isPresent() && matriculaExistente.get().isEstadoRegistro()) {
             matricula = matriculaExistente.get();
+            //redirectAttributes.addFlashAttribute("matricula", matricula);
             redirectAttributes.addFlashAttribute("tipoModal", "confirmacion");
             redirectAttributes.addFlashAttribute("mensaje", "El estudiante ya está matriculado. ¿Desea editar la matrícula?");
         } else {
@@ -196,6 +196,7 @@ public class MatricularEstudianteController {
         }
 
         redirectAttributes.addFlashAttribute("matricula", matricula);
+        redirectAttributes.addAttribute("id", matricula.getIdMatricula());
         return "redirect:/matriculas/matricular";
     }
 }

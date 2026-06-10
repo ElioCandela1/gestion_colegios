@@ -353,9 +353,9 @@
     <div th:if="${tipoModal == 'confirmacion'}" id="confirmacionModal" class="modal">
         <div class="modal-content">
             <p th:text="${mensaje}"></p>
-            <button th:onclick="'window.location.href=\'/matriculas/editar/' + ${idMatricula} + '\''">Editar
+            <button th:onclick="'window.location.href=\'/matriculas/editar/' + ${matricula.idMatricula} + '\''">Editar
                 matrícula</button>
-            <button onclick="cerrarModal('confirmacionModal')">Cancelar</button>
+            <button type="reset" class="btn cancelar" onclick="window.location.href='/matriculas/matricular'">Cancelar</button>
         </div>
     </div>
 
