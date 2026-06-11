@@ -95,6 +95,11 @@ body{
     outline:3px solid #33C52E;
 }
 
+.form-group.nombre-apoderado{
+        display: inline-block;
+        margin-left: 8px; 
+}
+
 /* =========================
    SWITCH
 ========================= */
@@ -193,9 +198,10 @@ body{
 }
 
 .busqueda{
+    margin-top: 25px;
     position: relative;
     width: 100%;
-    max-width: 300px;
+    max-width: 360px;
     margin-bottom: 20px;
 }
 

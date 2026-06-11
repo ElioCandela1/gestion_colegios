@@ -65,8 +65,8 @@
 
                     <div class="form-group">
                         <label>Fecha de Nacimiento</label>
-                        <input type="date" name="fechaNacimiento" th:value="${#temporals.format(estudiante.fechaNacimiento, 'yyyy-MM-dd')}"
-                            required>
+                        <input type="date" name="fechaNacimiento"
+                            th:value="${#temporals.format(estudiante.fechaNacimiento, 'yyyy-MM-dd')}" required>
                     </div>
 
                     <div class="form-group">
@@ -81,32 +81,33 @@
 
                     <div class="form-group">
                         <label>Correo</label>
-                        <input type="email" th:field="*{correo}">
+                        <input type="email" required th:field="*{correo}">
                     </div>
 
-                    <div class="busqueda">
+                    <div class="busqueda buscar-estudiante-apoderado">
 
                         <div>
-                            <input type="text" name="buscar" placeholder="Buscar apoderado por DNI">
-
+                            <input type="text" name="dniApoderado" placeholder="Buscar apoderado por DNI">
                             <button type="submit" formaction="/estudiantes/buscarApoderado" formmethod="get">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
                         </div>
 
-                        <div class="form-group" th:if="${apoderado != null}">
-                            <label>Apoderado</label>
-                            <input type="hidden" th:field="*{apoderado.idApoderado}">
-                            <input type="text" readonly th:value="|${apoderado.nombre} ${apoderado.primerApellido}|">
-                        </div>
-
                     </div>
+<div class="form-group nombre-apoderado" id="apoderadoNombre">
+    <label>Apoderado</label>
+    <input type="hidden" th:field="*{apoderado.idApoderado}">
+    <input type="text" required readonly
+           th:value="${apoderado != null ? apoderado.nombre + ' ' + apoderado.primerApellido : '--- Apoderado no asignado ---'}">
+</div>
+
 
                 </div>
 
                 <div class="acciones">
 
-                    <button type="reset" class="btn cancelar" onclick="window.location.href='/estudiantes/gestionEstudiantes'">
+                    <button type="reset" class="btn cancelar"
+                        onclick="window.location.href='/estudiantes/gestionEstudiantes'">
                         Cancelar
                     </button>
 
@@ -121,6 +122,15 @@
                 </div>
 
             </form>
+
+              <script>
+    document.querySelector("form").addEventListener("submit", function(e) {
+        if (!document.getElementById("apoderadoNombre").value) {
+            e.preventDefault();
+            alert("Debe seleccionar un apoderado");
+        }
+    });
+</script>
 
         </section>
 
@@ -179,7 +189,7 @@
                         <td th:text="${e.correo}"></td>
 
                         <td th:text="${e.apoderado != null ?
-                                      e.apoderado.nombre :
+                                      e.apoderado.nombre + ' ' + e.apoderado.primerApellido + ' ' + e.apoderado.segundoApellido:
                                       'Sin apoderado'}">
                         </td>
 

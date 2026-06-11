@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.sistema_colegios.gestion_colegios.Model.Entity.Apoderados;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Repository.EstudiantesRepository;
@@ -21,6 +22,8 @@ public class EstudiantesService {
     private EstudiantesRepository estudiantesRepository;
     @Autowired
     private AuditorAware<Usuarios> auditorAware;
+    @Autowired
+    private ApoderadosService apoderadosService;
 
  
     public String guardarEstudiante(Estudiantes estudiante) {
@@ -51,7 +54,9 @@ public class EstudiantesService {
             estudianteExistente.setDireccion(estudiante.getDireccion());
             estudianteExistente.setTelefono(estudiante.getTelefono());
             estudianteExistente.setCorreo(estudiante.getCorreo());
-            estudianteExistente.setApoderado(estudiante.getApoderado());
+
+            Apoderados apoderado = apoderadosService.obtenerApoderadosPorId(estudiante.getApoderado().getIdApoderado()); // Buscar apoderado en la DB
+            estudianteExistente.setApoderado(apoderado);
 
             estudiantesRepository.save(estudianteExistente);
 
@@ -120,6 +125,9 @@ public class EstudiantesService {
     estudianteAnt.setDireccion(estudiante.getDireccion());
     estudianteAnt.setTelefono(estudiante.getTelefono());
     estudianteAnt.setCorreo(estudiante.getCorreo());
+    
+    Apoderados apoderado = apoderadosService.obtenerApoderadosPorId(estudiante.getApoderado().getIdApoderado()); // Buscar apoderado en la DB
+    estudianteAnt.setApoderado(apoderado);
 
     return estudiantesRepository.save(estudianteAnt);
 }

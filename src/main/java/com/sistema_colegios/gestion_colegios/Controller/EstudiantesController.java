@@ -54,6 +54,10 @@ public class EstudiantesController {
 
         Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
 
+        Estudiantes estudiante = new Estudiantes();
+    estudiante.setApoderado(new Apoderados());
+    model.addAttribute("estudiante", estudiante);
+
         model.addAttribute("estudiantes", pagina.getContent()); // lista de estudiantes
         // model.addAttribute("paginaActual", page);
         // model.addAttribute("totalPaginas", pagina.getTotalPages());
@@ -142,12 +146,13 @@ public class EstudiantesController {
 
     // Buscar apoderado
     @GetMapping("/buscarApoderado")
-    public String buscarApoderado(@RequestParam String dni, RedirectAttributes redirectAttributes,
+    public String buscarApoderado(@RequestParam("dniApoderado") String dniApoderado, RedirectAttributes redirectAttributes,
             @ModelAttribute Estudiantes estudiante) {
 
         Apoderados apoderado;
         try {
-            apoderado = apoderadosService.obtenerApoderadosPorDni(dni);
+            apoderado = apoderadosService.obtenerApoderadosPorDni(dniApoderado);
+            
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
@@ -155,6 +160,8 @@ public class EstudiantesController {
             return "redirect:/estudiantes/gestionEstudiantes";
         }
 
+        estudiante.setApoderado(apoderado);        
+        System.out.println("Id del apoderad: " + apoderado.getIdApoderado() + "nombre: " + apoderado.getNombre());
         redirectAttributes.addFlashAttribute("estudiante", estudiante);
         redirectAttributes.addFlashAttribute("apoderado", apoderado);
 

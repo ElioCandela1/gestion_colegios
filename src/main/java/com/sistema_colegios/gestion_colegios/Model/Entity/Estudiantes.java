@@ -37,7 +37,7 @@ public class Estudiantes extends AuditoriaEntity {
     private String correo;
 
     @ManyToOne
-    @JoinColumn(name = "id_apoderado")
+    @JoinColumn(name = "id_apoderado", nullable = false)
     private Apoderados apoderado;
 
     public Estudiantes() {
