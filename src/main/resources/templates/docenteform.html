@@ -10,12 +10,16 @@
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" th:href="@{/matricular.css}">
     <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/modal.css}">
+    <script th:src="@{/modal.js}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
     <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <div th:replace="~{fragments/modales :: modales}"></div>
 
     <main id="content">
 
@@ -24,20 +28,6 @@
         <div class="card-form">
 
             <h2>Registro de Docente</h2>
-
-            <!-- BUSQUEDA -->
-
-            <form th:action="@{/docentes/buscar}" method="get" class="busqueda">
-
-                <input type="hidden" name="parametro" value="dni">
-
-                <input type="text" name="valor" placeholder="Ingrese DNI del docente">
-
-                <button type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-
-            </form>
 
             <!-- FORMULARIO -->
 
@@ -48,18 +38,19 @@
                 <div class="form-grid">
 
                     <div class="form-group">
-                        <label>ID</label>
-                        <input type="text" th:value="${docente?.idDocente}" readonly>
+                        <label>Codigo</label>
+                        <input type="text" id="codigo" th:field="*{codigo}" class="form-control"
+                            placeholder="Haga click en el botón nuevo para generar" readonly />
                     </div>
 
                     <div class="form-group">
                         <label>Nombres</label>
-                        <input type="text" th:field="*{nombres}">
+                        <input type="text" th:field="*{nombres}" required>
                     </div>
 
                     <div class="form-group">
                         <label>Primer Apellido</label>
-                        <input type="text" th:field="*{primerApellido}">
+                        <input type="text" th:field="*{primerApellido}" required>
                     </div>
 
                     <div class="form-group">
@@ -69,12 +60,27 @@
 
                     <div class="form-group">
                         <label>DNI</label>
-                        <input type="text" maxlength="8" th:field="*{dni}">
+                        <input type="text" maxlength="8" th:field="*{dni}" required>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Especialidad</label>
-                        <input type="text" th:field="*{especialidad}">
+                        <input type="text" th:field="*{especialidad}" required>
+                    </div>-->
+
+                    <div class="form-group">
+                        <label for="curso"> Especialidad</label>
+                        <select name="curso" id="curso" th:field="*{especialidad}" required>
+                            <option value="">-- Seleccione Especialidad --</option>
+                            <option value="comunicacion">Comunicación</option>
+                            <option value="matematica">Matemática</option>
+                            <option value="ciencia">Ciencia y Tecnología</option>
+                            <option value="personal-social">Personal Social</option>
+                            <option value="arte-cultura">Arte y Cultura</option>
+                            <option value="educacion-fisica">Educación Física</option>
+                            <option value="ingles">Inglés</option>
+                            <option value="religion">Religión / Valores</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -84,31 +90,16 @@
 
                     <div class="form-group">
                         <label>Correo</label>
-                        <input type="email" th:field="*{correo}">
+                        <input type="email" th:field="*{correo}" required>
                     </div>
 
-                    <div class="form-group estado-group">
-
-                        <label>Estado</label>
-
-                        <div class="switch-container">
-
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
-
-                            <span>Activo</span>
-
-                        </div>
-
-                    </div>
 
                 </div>
 
                 <div class="acciones">
 
-                    <button type="reset" class="btn cancelar">
+                    <button type="reset" class="btn cancelar"
+                        onclick="window.location.href='/docentes/gestionDocentes'">
                         Limpiar
                     </button>
 
@@ -116,7 +107,7 @@
                         Guardar
                     </button>
 
-                    <a th:href="@{/docentes}" class="btn agregar">
+                    <a th:href="@{/docentes/nuevo}" class="btn agregar">
                         Nuevo
                     </a>
 
@@ -138,23 +129,18 @@
 
             <div class="toolbar">
 
-                <div class="busqueda">
-                    <input type="text" placeholder="Buscar docente">
-                </div>
+                <!-- Buscar por DNI -->
+                <form th:action="@{/docentes/buscar}" method="get" class="busqueda">
 
-                <div class="filtro">
-                    <select name="curso" id="curso">
-                        <option value="">-- Selecciona curso --</option>
-                        <option value="comunicacion">Comunicación</option>
-                        <option value="matematica">Matemática</option>
-                        <option value="ciencia">Ciencia y Tecnología</option>
-                        <option value="personal-social">Personal Social</option>
-                        <option value="arte-cultura">Arte y Cultura</option>
-                        <option value="educacion-fisica">Educación Física</option>
-                        <option value="ingles">Inglés</option>
-                        <option value="religion">Religión / Valores</option>
-                    </select>
-                </div>
+                    <input type="text" name="dni" placeholder="Ingrese DNI del docente...">
+
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+
+                </form>
+
+
 
 
             </div>
@@ -214,6 +200,40 @@
                 </tbody>
 
             </table>
+
+            <div class="paginacion">
+
+                <!-- Anterior -->
+                <a th:if="${pagina.hasPrevious()}" th:href="@{/docentes/gestionDocentes(
+        page=${pagina.number - 1})}">
+                    ← Anterior
+                </a>
+
+
+                <!-- Números -->
+                <div th:if="${pagina.totalPages > 0}">
+
+                    <span th:each="i : ${#numbers.sequence(0, pagina.totalPages - 1)}">
+
+                        <a th:href="@{/docentes/gestionDocentes(
+                page=${i})}" th:class="${i == pagina.number} ? 'activo'">
+
+                            [[${i + 1}]]
+
+                        </a>
+
+                    </span>
+
+                </div>
+
+
+                <!-- Siguiente -->
+                <a th:if="${pagina.hasNext()}" th:href="@{/docentes/gestionDocentes(
+        page=${pagina.number + 1})}">
+                    Siguiente →
+                </a>
+
+            </div>
 
         </div>
 

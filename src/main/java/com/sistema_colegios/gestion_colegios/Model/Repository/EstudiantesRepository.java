@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
-import com.sistema_colegios.gestion_colegios.Model.Entity.Matriculas;
 
 @Repository
 public interface EstudiantesRepository extends JpaRepository<Estudiantes, Integer> {

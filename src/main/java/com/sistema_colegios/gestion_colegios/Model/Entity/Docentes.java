@@ -11,6 +11,9 @@ public class Docentes extends AuditoriaEntity {
     @Column(name = "id_docente")
     private Integer idDocente;
 
+    @Column(name = "codigo", unique = true, nullable = false)
+    private String codigo;
+
     @Column(name = "nombres", nullable = false)
     private String nombres;
 
@@ -93,5 +96,14 @@ public class Docentes extends AuditoriaEntity {
         this.correo = correo;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    
     
 }
