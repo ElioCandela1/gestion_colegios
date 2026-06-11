@@ -1,10 +1,8 @@
 package com.sistema_colegios.gestion_colegios.Model.Repository;
 
-
 import java.util.List;
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,29 +20,28 @@ public interface MatriculasRepository extends JpaRepository<Matriculas, Integer>
 
     boolean existsByEstudiante(Estudiantes estudiante);
 
-    //@Query("SELECT m FROM Matriculas m WHERE m.estadoRegistro = true")
+    // @Query("SELECT m FROM Matriculas m WHERE m.estadoRegistro = true")
     List<Matriculas> findByEstadoRegistroTrue();
 
     Optional<Matriculas> findByEstudianteAndAnioEscolarAndEstadoRegistro(
-        Estudiantes estudiante,
-        Integer anioEscolar,
-        boolean estadoRegistro);
+            Estudiantes estudiante,
+            Integer anioEscolar,
+            boolean estadoRegistro);
 
-     @Query("""
-        SELECT m FROM Matriculas m
-        WHERE m.estadoRegistro = true 
-        AND(:anio IS NULL OR m.anioEscolar = :anio)
-        AND (:grado IS NULL OR m.grado.idGrado = :grado)
-        AND (:seccion IS NULL OR m.seccion.nombreSeccion = :seccion)
-    """)
+    @Query("""
+                SELECT m FROM Matriculas m
+                WHERE m.estadoRegistro = true
+                AND(:anio IS NULL OR m.anioEscolar = :anio)
+                AND (:grado IS NULL OR m.grado.idGrado = :grado)
+                AND (:seccion IS NULL OR m.seccion.nombreSeccion = :seccion)
+            """)
     Page<Matriculas> buscarConFiltros(
             @Param("anio") Integer anio,
             @Param("grado") Integer grado,
             @Param("seccion") String seccion,
-            Pageable pageable
-    );
+            Pageable pageable);
 
-     @Query("SELECT DISTINCT m.anioEscolar FROM Matriculas m ORDER BY m.anioEscolar ASC")
-     List<Integer> findAnios();
-    
+    @Query("SELECT DISTINCT m.anioEscolar FROM Matriculas m ORDER BY m.anioEscolar ASC")
+    List<Integer> findAnios();
+
 }

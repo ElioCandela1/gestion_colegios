@@ -8,6 +8,8 @@
     <link rel="stylesheet" th:href="@{/reset.css}">
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/modal.css}">
+    <script th:src="@{/modal.js}"></script>
     <link rel="stylesheet" th:href="@{/matricular.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -15,6 +17,8 @@
 <body>
 
     <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <div th:replace="~{fragments/modales :: modales}"></div>
 
     <main id="content">
 
@@ -36,7 +40,7 @@
 
                     <div class="form-group">
                         <label>Código</label>
-                        <input type="text" th:field="*{codigo}" placeholder="A15439" required>
+                        <input type="text" th:field="*{codigo}" th:placeholder="${estudiante.codigo}" required readonly>
                     </div>
 
                     <div class="form-group">
@@ -61,7 +65,8 @@
 
                     <div class="form-group">
                         <label>Fecha de Nacimiento</label>
-                        <input type="date" th:field="*{fechaNacimiento}" required>
+                        <input type="date" name="fechaNacimiento" th:value="${#temporals.format(estudiante.fechaNacimiento, 'yyyy-MM-dd')}"
+                            required>
                     </div>
 
                     <div class="form-group">
@@ -79,23 +84,33 @@
                         <input type="email" th:field="*{correo}">
                     </div>
 
-                    <div class="form-group">
-                        <label>Apoderado</label>
+                    <div class="busqueda">
 
-                        <select th:field="*{apoderado.idApoderado}">
-                            <option value="">Seleccione Apoderado</option>
+                        <div>
+                            <input type="text" name="buscar" placeholder="Buscar apoderado por DNI">
 
-                            <option th:each="a : ${apoderados}" th:value="${a.idApoderado}"
-                                th:text="${a.nombre + ' ' + a.primerApellido}">
-                            </option>
-                        </select>
+                            <button type="submit" formaction="/estudiantes/buscarApoderado" formmethod="get">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-group" th:if="${apoderado != null}">
+                            <label>Apoderado</label>
+                            <input type="hidden" th:field="*{apoderado.idApoderado}">
+                            <input type="text" readonly th:value="|${apoderado.nombre} ${apoderado.primerApellido}|">
+                        </div>
+
                     </div>
 
                 </div>
 
                 <div class="acciones">
 
-                    <a th:href="@{/estudiantes}" class="btn cancelar">
+                    <button type="reset" class="btn cancelar" onclick="window.location.href='/estudiantes/gestionEstudiantes'">
+                        Cancelar
+                    </button>
+
+                    <a th:href="@{/estudiantes/nuevo}" class="btn nuevo">
                         Nuevo
                     </a>
 
@@ -117,9 +132,9 @@
 
             <div class="busqueda">
 
-                <form th:action="@{/estudiantes}" method="get">
+                <form th:action="@{/estudiantes/buscar}" method="get">
 
-                    <input type="text" name="buscar" placeholder="Buscar estudiante">
+                    <input type="text" name="dni" placeholder="Buscar estudiante por dni">
 
                     <button type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -191,9 +206,48 @@
 
             </table>
 
+
+            <div class="paginacion">
+
+                <!-- Anterior -->
+                <a th:if="${pagina.hasPrevious()}" th:href="@{/estudiantes/gestionEstudiantes(
+        page=${pagina.number - 1})}">
+                    ← Anterior
+                </a>
+
+
+                <!-- Números -->
+                <div th:if="${pagina.totalPages > 0}">
+
+                    <span th:each="i : ${#numbers.sequence(0, pagina.totalPages - 1)}">
+
+                        <a th:href="@{/estudiantes/gestionEstudiantes(
+                page=${i})}" th:class="${i == pagina.number} ? 'activo'">
+
+                            [[${i + 1}]]
+
+                        </a>
+
+                    </span>
+
+                </div>
+
+
+                <!-- Siguiente -->
+                <a th:if="${pagina.hasNext()}" th:href="@{/estudiantes/gestionEstudiantes(
+        page=${pagina.number + 1})}">
+                    Siguiente →
+                </a>
+
+            </div>
+
         </section>
 
+
+
     </main>
+
+
 
 </body>
 

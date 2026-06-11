@@ -1,10 +1,8 @@
 package com.sistema_colegios.gestion_colegios.Model.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.domain.Page;
@@ -12,9 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
-import com.sistema_colegios.gestion_colegios.Model.Entity.Grados;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Matriculas;
-import com.sistema_colegios.gestion_colegios.Model.Entity.Secciones;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Repository.MatriculasRepository;
 

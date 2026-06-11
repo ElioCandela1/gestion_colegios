@@ -1,30 +1,77 @@
 package com.sistema_colegios.gestion_colegios.Model.Service;
 
+import com.sistema_colegios.gestion_colegios.Controller.EstudiantesController;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Repository.EstudiantesRepository;
-import com.sistema_colegios.gestion_colegios.Model.Security.AuditorAwareImpl;
 
 @Service
 public class EstudiantesService {
+    
     @Autowired
     private EstudiantesRepository estudiantesRepository;
     @Autowired
     private AuditorAware<Usuarios> auditorAware;
 
-    public Estudiantes guardarEstudiante(Estudiantes estudiante) {
-        return estudiantesRepository.save(estudiante);
+ 
+    public String guardarEstudiante(Estudiantes estudiante) {
+        
+        Estudiantes estudianteExistente = null;
+        //Buscar si existe estudiante en la DB
+         try {
+            estudianteExistente = obtenerEstudiantePorDni(estudiante.getDni());
+        } catch (Exception e) {
+        }
+        
+        if (estudianteExistente != null) {
+
+            if (estudianteExistente.isEstadoRegistro()) {
+                //Ya existe el estudiante y estadoRegistro está activo
+                try {
+                    actualizarEstudiante(estudiante);
+                } catch (Exception e) {
+                    return e.getMessage();
+                }
+                return "Estudiante Actualizado correctamente";
+            } else {
+                System.out.println("ingresé al else");
+                // Existe pero estaba eliminado, reactivar
+            estudianteExistente.setEstadoRegistro(true);
+            estudianteExistente.setNombre(estudiante.getNombre());
+            estudianteExistente.setPrimerApellido(estudiante.getPrimerApellido());
+            estudianteExistente.setSegundoApellido(estudiante.getSegundoApellido());
+            estudianteExistente.setDireccion(estudiante.getDireccion());
+            estudianteExistente.setTelefono(estudiante.getTelefono());
+            estudianteExistente.setCorreo(estudiante.getCorreo());
+            estudianteExistente.setApoderado(estudiante.getApoderado());
+
+            estudiantesRepository.save(estudianteExistente);
+
+            return "Estudiante reactivado exitosamente";
+            }
+            //System.out.println("terminé de evaluar primer if");
+        } 
+
+        System.out.println("salí de los if y voy a guardar estudiante: " + estudiante.getNombre());
+        // No existe el estudiante, guardar uno nuevo
+        estudiantesRepository.save(estudiante);
+
+        return "Estudiante guardado exitosamente";
     }
 
-    public Optional<Estudiantes> obtenerEstudiantePorId(int id){
-        return estudiantesRepository.findById(id);
+    public Estudiantes obtenerEstudiantePorId(int id) {
+        return estudiantesRepository.findById(id).orElseThrow(null);
     }
 
     public Estudiantes obtenerEstudiantePorCodigo(String codigo) {
@@ -36,11 +83,17 @@ public class EstudiantesService {
     }
 
     public Estudiantes obtenerEstudiantePorDni(String dni) {
-        return estudiantesRepository.findByDni(dni).orElseThrow(()->new RuntimeException("No existe el estudiante con DNI: " + dni));
+        return estudiantesRepository.findByDni(dni)
+                .orElseThrow(() -> new RuntimeException("No existe el estudiante con DNI: " + dni));
+    }
+   
+    public Page <Estudiantes> obtenerEstudiantePorDniPage(String dni, int numeroPagina) {
+       Pageable pageable = PageRequest.of(numeroPagina,10);
+       return estudiantesRepository.findByDniPage(dni, pageable);
     }
 
-    public Estudiantes eliminarEstudiante(int id) {
-         // 1. Buscar el estudiante por ID
+    public String eliminarEstudiante(int id) {
+        // 1. Buscar el estudiante por ID
         Estudiantes estudiante = estudiantesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
 
@@ -49,13 +102,32 @@ public class EstudiantesService {
         estudiante.softDelete(usuarioActual);
 
         // 3. Guardar nuevamente
-        return estudiantesRepository.save(estudiante);
+        estudiantesRepository.save(estudiante);
+
+        return "Estudiante eliminado con exito";
 
     }
 
     public Estudiantes actualizarEstudiante(Estudiantes estudiante) {
-        return estudiantesRepository.save(estudiante);
+    
+    Estudiantes estudianteAnt = obtenerEstudiantePorDni(estudiante.getDni());
+
+    if (estudianteAnt == null) {
+        throw new RuntimeException("Estudiante no encontrado");
     }
+
+    // Actualizar los campos necesarios
+    estudianteAnt.setNombre(estudiante.getNombre());
+    estudianteAnt.setPrimerApellido(estudiante.getPrimerApellido());
+    estudianteAnt.setSegundoApellido(estudiante.getSegundoApellido());
+    estudianteAnt.setDni(estudiante.getDni());
+    estudianteAnt.setFechaNacimiento(estudiante.getFechaNacimiento());
+    estudianteAnt.setDireccion(estudiante.getDireccion());
+    estudianteAnt.setTelefono(estudiante.getTelefono());
+    estudianteAnt.setCorreo(estudiante.getCorreo());
+
+    return estudiantesRepository.save(estudianteAnt);
+}
 
     public List<Estudiantes> listarEstudiantes() {
         return estudiantesRepository.findAll();
@@ -65,7 +137,14 @@ public class EstudiantesService {
         return estudiantesRepository.findByPrimerApellido(valor).orElse(null);
     }
 
+    public int obtenerSiguienteId() {
+        int siguienteId = (int) estudiantesRepository.count() + 1;
+        return siguienteId;
+    }
 
-
+    public Page<Estudiantes> listarEstudiantesActivos(int numeroPagina) {
+    Pageable pageable = PageRequest.of(numeroPagina, 10); // página, tamaño
+    return estudiantesRepository.findAllPage(pageable);
+}
 
 }

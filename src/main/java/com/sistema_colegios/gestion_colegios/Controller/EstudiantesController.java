@@ -1,23 +1,34 @@
 package com.sistema_colegios.gestion_colegios.Controller;
 
+import java.lang.ProcessBuilder.Redirect;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.autoconfigure.ServerProperties.Reactive.Session;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+import com.sistema_colegios.gestion_colegios.Model.Entity.Apoderados;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
+import com.sistema_colegios.gestion_colegios.Model.Entity.Matriculas;
+import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Service.ApoderadosService;
 import com.sistema_colegios.gestion_colegios.Model.Service.EstudiantesService;
+import com.sistema_colegios.gestion_colegios.Model.Service.GeneradorCodigoEstudiante;
 import com.sistema_colegios.gestion_colegios.Model.Service.MatriculasService;
 
-
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/estudiantes")
@@ -28,17 +39,68 @@ public class EstudiantesController {
     MatriculasService matriculasService;
     @Autowired
     ApoderadosService apoderadosService;
+    @Autowired
+    GeneradorCodigoEstudiante generadorCodigoEstudiante;
 
-    //Mostrar la ventana de Gestion de Estudiantes
+    // Atributo global para este controller
+    @ModelAttribute("estudiante")
+    public Estudiantes cargarEstudiante() {
+        return new Estudiantes();
+    }
 
+    // Usuario logeado desde la sesión
+    @ModelAttribute("usuarioLogeado")
+    public Usuarios usuarioLogeado(HttpSession session) {
+        return (Usuarios) session.getAttribute("usuarioLogeado");
+    }
+
+    // Mostrar la ventana de Gestion de Estudiantes
     @GetMapping("/gestionEstudiantes")
-    public String mostrarGestionEstudiantes(Model model) {
-        model.addAttribute("estudiante",new Estudiantes());
-        model.addAttribute("estudiantes", estudiantesService.listarEstudiantes());
-        model.addAttribute("apoderados", apoderadosService.listarApoderados());
+    public String mostrarGestionEstudiantes(Model model, @RequestParam(defaultValue = "0") int page) {
+
+        Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
+
+        model.addAttribute("estudiantes", pagina.getContent()); // lista de estudiantes
+        // model.addAttribute("paginaActual", page);
+        // model.addAttribute("totalPaginas", pagina.getTotalPages());
+        model.addAttribute("pagina", pagina);
+        // model.addAttribute("estudiantes", estudiantesService.listarEstudiantes());
+        // model.addAttribute("apoderados", apoderadosService.listarApoderados());
         return "estudianteform";
     }
-    
+
+    // Generar codigo para nuevo estudiante
+    @GetMapping("/nuevo")
+    public String nuevoEstudiante(RedirectAttributes redirectAttributes, Estudiantes estudiante) {
+
+        estudiante.setCodigo(generadorCodigoEstudiante.generarCodigo());
+        redirectAttributes.addFlashAttribute("estudiante", estudiante);
+        return "redirect:/estudiantes/gestionEstudiantes";
+    }
+
+    // Guardar Estudiante
+    @PostMapping("/guardar")
+    public String guardarEstudiante(@ModelAttribute Estudiantes estudiante,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(defaultValue = "0") int page) {
+
+        Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
+
+        try {
+            String guardar = estudiantesService.guardarEstudiante(estudiante);
+
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", guardar);
+        } catch (Exception e) {
+
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+        }
+
+        redirectAttributes.addFlashAttribute("pagina", pagina);
+        redirectAttributes.addFlashAttribute("estudiantes", pagina.getContent());
+        return "redirect:/estudiantes/gestionEstudiantes";
+    }
 
     // Listar todos los estudiantes
     @GetMapping("/listarEstudiantes")
@@ -47,43 +109,79 @@ public class EstudiantesController {
     }
 
     // Editar estudiante
-    // Llenar los datos del formulario con los del estudiante seleccionado
+    @GetMapping("/editar/{id}")
+    public String editarDatosEstudiante(RedirectAttributes redirectAttributes,
+            @ModelAttribute Estudiantes estudiante,
+            @RequestParam(defaultValue = "0") int page,
+            @PathVariable Integer id) {
 
-    @PostMapping("/editar")
-    public void editarDatosEstudiante(Model model, @ModelAttribute Estudiantes estudiante) {
-        estudiantesService.actualizarEstudiante(estudiante);
-        model.addAttribute("confirmación", "Estudiante modificado");
+        try {
+            estudiante = estudiantesService.obtenerEstudiantePorId(id);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+        }
+        // Pageable pageable = PageRequest.of(page, 10);
+        Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
+
+        redirectAttributes.addFlashAttribute("estudiante", estudiante);
+        redirectAttributes.addFlashAttribute("pagina", pagina);
+        redirectAttributes.addFlashAttribute("estudiantes", pagina.getContent());
+
+        return "redirect:/estudiantes/gestionEstudiantes";
 
     }
 
     // Buscar estudiante
     @GetMapping("/buscar")
-    public String buscarEstudiante(@RequestParam String parametro, @RequestParam String valor, Model model, Session usuarioActual) {
-        Estudiantes estudiante = null;
-        switch (parametro) {
-            case "codigo":
-                estudiante = estudiantesService.obtenerEstudiantePorCodigo(valor);
-                break;
-            case "nombre":
-                estudiante = estudiantesService.obtenerEstudiantePorNombre(valor);
-                break;
-            case "dni":
-                estudiante = estudiantesService.obtenerEstudiantePorDni(valor);
-                break;
-            case "apellido":
-                estudiante = estudiantesService.obtenerEstudiantePorApellido(valor);
-                break;
+    public String buscarEstudiante(@RequestParam String dni,
+            Model model,
+            @RequestParam(defaultValue = "0") int page) {
+
+        Page<Estudiantes> pagina = estudiantesService.obtenerEstudiantePorDniPage(dni, page);
+
+        model.addAttribute("estudiantes", pagina.getContent());
+        model.addAttribute("pagina", pagina);
+
+        return "estudianteform";
+    }
+
+    // Buscar apoderado
+    @GetMapping("/buscarApoderado")
+    public String buscarApoderado(@RequestParam String dni, RedirectAttributes redirectAttributes,
+            @ModelAttribute Estudiantes estudiante) {
+
+        Apoderados apoderado;
+        try {
+            apoderado = apoderadosService.obtenerApoderadosPorDni(dni);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            redirectAttributes.addFlashAttribute("estudiante", estudiante);
+            return "redirect:/estudiantes/gestionEstudiantes";
         }
 
-        // Cargar el estudiante encontrado en el formulario
-        model.addAttribute("estudiante", estudiante != null ? estudiante : new Estudiantes());
+        redirectAttributes.addFlashAttribute("estudiante", estudiante);
+        redirectAttributes.addFlashAttribute("apoderado", apoderado);
 
-        // Cargar la lista completa de matriculados
-        model.addAttribute("estudiantesMatriculados", matriculasService.listarEstudiantesMatriculados());
+        return "redirect:/estudiantes/gestionEstudiantes";
+    }
 
-        // Cargar la sesion actual
-        model.addAttribute("usuarioLogeado", usuarioActual);
-        return "matricular";
+    // Eliminar estudiante (Soft Delete)
+    @GetMapping("/eliminar/{id}")
+    public String eliminarEstudiante(@PathVariable Integer id,
+            RedirectAttributes redirectAttributes) {
+        String mensaje = new String();
+        try {
+            mensaje = estudiantesService.eliminarEstudiante(id);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+        }
+
+        redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+        redirectAttributes.addFlashAttribute("mensaje", mensaje);
+        return "redirect:/estudiantes/gestionEstudiantes";
     }
 
 }
