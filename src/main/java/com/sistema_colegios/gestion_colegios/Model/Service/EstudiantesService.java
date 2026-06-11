@@ -1,8 +1,6 @@
 package com.sistema_colegios.gestion_colegios.Model.Service;
 
-import com.sistema_colegios.gestion_colegios.Controller.EstudiantesController;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
@@ -45,7 +43,6 @@ public class EstudiantesService {
                 }
                 return "Estudiante Actualizado correctamente";
             } else {
-                System.out.println("ingresé al else");
                 // Existe pero estaba eliminado, reactivar
             estudianteExistente.setEstadoRegistro(true);
             estudianteExistente.setNombre(estudiante.getNombre());
@@ -60,10 +57,8 @@ public class EstudiantesService {
 
             return "Estudiante reactivado exitosamente";
             }
-            //System.out.println("terminé de evaluar primer if");
         } 
 
-        System.out.println("salí de los if y voy a guardar estudiante: " + estudiante.getNombre());
         // No existe el estudiante, guardar uno nuevo
         estudiantesRepository.save(estudiante);
 

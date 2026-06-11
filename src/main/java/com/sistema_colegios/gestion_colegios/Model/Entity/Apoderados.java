@@ -11,6 +11,9 @@ public class Apoderados extends AuditoriaEntity {
     @Column(name = "id_apoderado")
     private Integer idApoderado;
 
+    @Column(name = "codigo", unique = true, nullable = false)
+    private String codigo;
+
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
@@ -29,8 +32,8 @@ public class Apoderados extends AuditoriaEntity {
     @Column(name = "correo")
     private String correo;
 
-    @Column(name = "parentesco", nullable = false)
-    private String parentesco;
+   // @Column(name = "parentesco", nullable = false)
+    //private String parentesco;
 
     public Integer getIdApoderado() {
         return idApoderado;
@@ -88,12 +91,20 @@ public class Apoderados extends AuditoriaEntity {
         this.correo = correo;
     }
 
-    public String getParentesco() {
+    /*public String getParentesco() {
         return parentesco;
     }
 
     public void setParentesco(String parentesco) {
         this.parentesco = parentesco;
+    }*/
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     

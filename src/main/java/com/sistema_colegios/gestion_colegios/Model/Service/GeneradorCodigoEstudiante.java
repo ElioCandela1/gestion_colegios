@@ -13,7 +13,7 @@ public class GeneradorCodigoEstudiante implements GenerarCodigoUsuario {
 
     @Override
     public String generarCodigo() {
-        return "A" + estudiantesService.obtenerSiguienteId();
+        return "E" + estudiantesService.obtenerSiguienteId();
     }
 
 }

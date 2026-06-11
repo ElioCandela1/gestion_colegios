@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" th:href="@{/matricular.css}">
     <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/modal.css}">
+    <script th:src="@{/modal.js}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
@@ -17,6 +19,8 @@
 <body>
 
     <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <div th:replace="~{fragments/modales :: modales}"></div>
 
     <main id="content">
 
@@ -26,165 +30,63 @@
 
             <h2>Registro de Apoderado</h2>
 
-            <!-- Buscar por DNI -->
-            <form th:action="@{/apoderados/buscar}"
-                method="get"
-                class="busqueda">
-
-                <input type="hidden"
-                    name="parametro"
-                    value="dni">
-
-                <input type="text"
-                    name="valor"
-                    placeholder="Ingrese DNI del apoderado...">
-
-                <button type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-
-            </form>
-
             <!-- Formulario -->
 
-            <form th:action="@{/apoderados/guardar}"
-                th:object="${apoderado}"
-                method="post">
+            <form th:action="@{/apoderados/guardar}" th:object="${apoderado}" method="post">
 
-                <input type="hidden"
-                    th:field="*{idApoderado}">
+                <input type="hidden" th:field="*{idApoderado}">
 
                 <div class="form-grid">
 
                     <div class="form-group">
-                        <label>ID</label>
-                        <input type="text"
-                            th:value="${apoderado?.idApoderado}"
-                            readonly>
+                        <label>Codigo</label>
+                        <input type="text" th:field="*{codigo}" th:placeholder="${apoderado.codigo}" required readonly>
                     </div>
 
                     <div class="form-group">
                         <label>Nombres</label>
-                        <input type="text"
-                            th:field="*{nombre}"
-                            placeholder="Ingrese nombres">
+                        <input type="text" th:field="*{nombre}" placeholder="Ingrese nombres">
                     </div>
 
                     <div class="form-group">
                         <label>Primer Apellido</label>
-                        <input type="text"
-                            th:field="*{primerApellido}"
-                            placeholder="Ingrese primer apellido">
+                        <input type="text" th:field="*{primerApellido}" placeholder="Ingrese primer apellido">
                     </div>
 
                     <div class="form-group">
                         <label>Segundo Apellido</label>
-                        <input type="text"
-                            th:field="*{segundoApellido}"
-                            placeholder="Ingrese segundo apellido">
+                        <input type="text" th:field="*{segundoApellido}" placeholder="Ingrese segundo apellido">
                     </div>
 
                     <div class="form-group">
                         <label>DNI</label>
-                        <input type="text"
-                            maxlength="8"
-                            th:field="*{dni}"
-                            placeholder="12345678">
+                        <input type="text" maxlength="8" th:field="*{dni}" placeholder="12345678">
                     </div>
 
                     <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="text"
-                            maxlength="9"
-                            th:field="*{telefono}"
-                            placeholder="999999999">
+                        <input type="text" maxlength="9" th:field="*{telefono}" placeholder="999999999">
                     </div>
 
                     <div class="form-group">
                         <label>Correo</label>
-                        <input type="email"
-                            th:field="*{correo}"
-                            placeholder="correo@ejemplo.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Parentesco</label>
-
-                        <select th:field="*{parentesco}">
-
-                            <option value="">
-                                Seleccione parentesco
-                            </option>
-
-                            <option value="PADRE">
-                                Padre
-                            </option>
-
-                            <option value="MADRE">
-                                Madre
-                            </option>
-
-                            <option value="ABUELO">
-                                Abuelo
-                            </option>
-
-                            <option value="ABUELA">
-                                Abuela
-                            </option>
-
-                            <option value="TIO">
-                                Tío
-                            </option>
-
-                            <option value="TIA">
-                                Tía
-                            </option>
-
-                            <option value="OTRO">
-                                Otro
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="form-group estado-group">
-
-                        <label>Estado</label>
-
-                        <div class="switch-container">
-
-                            <label class="switch">
-
-                                <input type="checkbox"
-                                    checked>
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                            <span>Activo</span>
-
-                        </div>
-
-                    </div>
+                        <input type="email" th:field="*{correo}" placeholder="correo@ejemplo.com">
+                    </div> 
 
                 </div>
 
                 <div class="acciones">
 
-                    <button type="reset"
-                        class="btn cancelar">
+                    <button type="reset" class="btn cancelar"
+                        onclick="window.location.href='/apoderados/gestionApoderados'">
                         Limpiar
                     </button>
 
-                    <button type="submit"
-                        class="btn guardar">
+                    <button type="submit" class="btn guardar">
                         Guardar
                     </button>
 
-                    <a th:href="@{/apoderados/nuevo}"
-                        class="btn agregar">
+                    <a th:href="@{/apoderados/nuevo}" class="btn agregar">
                         Nuevo
                     </a>
 
@@ -206,40 +108,16 @@
 
             <div class="toolbar">
 
-                <div class="busqueda">
+                <!-- Buscar por DNI -->
+                <form th:action="@{/apoderados/buscar}" method="get" class="busqueda">
 
-                    <input type="text"
-                        placeholder="Buscar por nombre o DNI">
+                    <input type="text" name="dni" placeholder="Ingrese DNI del apoderado...">
 
-                </div>
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
 
-                <div class="filtro">
-
-                    <select>
-
-                        <option>
-                            Todos los parentescos
-                        </option>
-
-                        <option>
-                            Padre
-                        </option>
-
-                        <option>
-                            Madre
-                        </option>
-
-                        <option>
-                            Abuelo
-                        </option>
-
-                        <option>
-                            Abuela
-                        </option>
-
-                    </select>
-
-                </div>
+                </form>
 
             </div>
 
@@ -254,7 +132,6 @@
                         <th>DNI</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
-                        <th>Parentesco</th>
                         <th>Acciones</th>
                     </tr>
 
@@ -276,8 +153,6 @@
 
                         <td th:text="${a.correo}"></td>
 
-                        <td th:text="${a.parentesco}"></td>
-
                         <td>
 
                             <a th:href="@{/apoderados/editar/{id}(id=${a.idApoderado})}">
@@ -298,6 +173,39 @@
                 </tbody>
 
             </table>
+            <div class="paginacion">
+
+                <!-- Anterior -->
+                <a th:if="${pagina.hasPrevious()}" th:href="@{/apoderados/gestionApoderados(
+        page=${pagina.number - 1})}">
+                    ← Anterior
+                </a>
+
+
+                <!-- Números -->
+                <div th:if="${pagina.totalPages > 0}">
+
+                    <span th:each="i : ${#numbers.sequence(0, pagina.totalPages - 1)}">
+
+                        <a th:href="@{/apoderados/gestionApoderados(
+                page=${i})}" th:class="${i == pagina.number} ? 'activo'">
+
+                            [[${i + 1}]]
+
+                        </a>
+
+                    </span>
+
+                </div>
+
+
+                <!-- Siguiente -->
+                <a th:if="${pagina.hasNext()}" th:href="@{/apoderados/gestionApoderados(
+        page=${pagina.number + 1})}">
+                    Siguiente →
+                </a>
+
+            </div>
 
         </div>
 

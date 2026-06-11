@@ -1,18 +1,13 @@
 package com.sistema_colegios.gestion_colegios.Controller;
 
-import java.lang.ProcessBuilder.Redirect;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.autoconfigure.ServerProperties.Reactive.Session;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Apoderados;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
-import com.sistema_colegios.gestion_colegios.Model.Entity.Matriculas;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Service.ApoderadosService;
 import com.sistema_colegios.gestion_colegios.Model.Service.EstudiantesService;
@@ -28,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/estudiantes")
