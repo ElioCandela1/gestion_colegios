@@ -29,17 +29,18 @@ public interface MatriculasRepository extends JpaRepository<Matriculas, Integer>
             boolean estadoRegistro);
 
     @Query("""
-                SELECT m FROM Matriculas m
-                WHERE m.estadoRegistro = true
-                AND(:anio IS NULL OR m.anioEscolar = :anio)
-                AND (:grado IS NULL OR m.grado.idGrado = :grado)
-                AND (:seccion IS NULL OR m.seccion.nombreSeccion = :seccion)
-            """)
-    Page<Matriculas> buscarConFiltros(
-            @Param("anio") Integer anio,
-            @Param("grado") Integer grado,
-            @Param("seccion") String seccion,
-            Pageable pageable);
+    SELECT m FROM Matriculas m
+    JOIN FETCH m.estudiante e
+    WHERE m.estadoRegistro = true
+    AND (:anio IS NULL OR m.anioEscolar = :anio)
+    AND (:grado IS NULL OR m.grado.idGrado = :grado)
+    AND (:seccion IS NULL OR m.seccion.nombreSeccion = :seccion)
+""")
+Page<Matriculas> buscarConFiltros(
+        @Param("anio") Integer anio,
+        @Param("grado") Integer grado,
+        @Param("seccion") String seccion,
+        Pageable pageable);
 
     @Query("SELECT DISTINCT m.anioEscolar FROM Matriculas m ORDER BY m.anioEscolar ASC")
     List<Integer> findAnios();

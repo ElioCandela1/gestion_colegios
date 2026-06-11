@@ -170,8 +170,8 @@
                 <div class="filtro">
                     <select name="anioEscolar" onchange="this.form.submit()">
                         <option value="">Todos los años</option>
-                        <option th:each="a:${estudiantesMatriculados}" th:value="${a.anioEscolar}"
-                            th:text="${a.anioEscolar}" th:selected="${a.anioEscolar == anioSeleccionado}">
+                        <option th:each="a:${anios}" th:value="${a}"
+                            th:text="${a}" th:selected="${a == anioSeleccionado}">
                         </option>
                     </select>
 
@@ -224,11 +224,11 @@
 
                     <tr th:each="m : ${estudiantesMatriculados}">
 
-                        <td th:text="${m.estudiante.codigo}"></td>
+                        <td th:text="${m.estudiante?.codigo}"></td>
 
-                        <td th:text="${m.estudiante.nombre}"></td>
+                        <td th:text="${m.estudiante?.nombre}"></td>
 
-                        <td th:text="${m.estudiante.primerApellido + ' ' + m.estudiante.segundoApellido}"></td>
+                        <td th:text="${m.estudiante?.primerApellido + ' ' + m.estudiante?.segundoApellido}"></td>
 
                         <td th:text="${m.grado.nombreGrado}"></td>
 
@@ -241,7 +241,12 @@
                         <td>
 
 
-                            <a th:href="@{/matriculas/editar/{id}(id=${m.idMatricula})}">
+                            <a th:href="@{/matriculas/editar/{id}(
+    id=${m.idMatricula},
+    page=${pagina.number},
+    anioEscolar=${anioSeleccionado},
+    grado=${gradoSeleccionado},
+    seccion=${seccionSeleccionada})}">
                                 <i class="fa-solid fa-pen-to-square"></i></a>
 
                             <a th:href="@{/matriculas/eliminar/{id}(id=${m.idMatricula})}"

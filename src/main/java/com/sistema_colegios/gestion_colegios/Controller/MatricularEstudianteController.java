@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,21 +56,20 @@ public class MatricularEstudianteController {
 
     // Mostrar el formulario de matriculación
     @GetMapping("/matricular")
-    public String mostrarFormularioMatriculacion(@RequestParam(required = false) Integer anioEscolar,
+    public String mostrarFormularioMatriculacion(
+            @RequestParam(required = false) Integer anioEscolar,
             @RequestParam(required = false) Integer grado,
             @RequestParam(required = false) String seccion,
-
             @RequestParam(defaultValue = "0") int page,
-            // @RequestParam(defaultValue = "10") int size,
             Model model) {
 
         model.addAttribute("anios", matriculasService.listarAnios());
 
-        Pageable pageable = PageRequest.of(page, 10);
-
         if (seccion != null && seccion.isBlank()) {
             seccion = null;
         }
+
+        Pageable pageable = PageRequest.of(page, 10);
 
         Page<Matriculas> pagina = matriculasService.filtrar(
                 anioEscolar,
@@ -77,10 +77,7 @@ public class MatricularEstudianteController {
                 seccion,
                 pageable);
 
-        model.addAttribute(
-                "estudiantesMatriculados",
-                pagina.getContent());
-
+        model.addAttribute("estudiantesMatriculados", pagina.getContent());
         model.addAttribute("pagina", pagina);
 
         // Mantener filtros seleccionados
@@ -93,18 +90,46 @@ public class MatricularEstudianteController {
 
     // Guardar una nueva matrícula
     @PostMapping("/matricular")
-    public String matricularEstudiante(@ModelAttribute("matricula") Matriculas matricula,
+    public String matricularEstudiante(
+            @ModelAttribute("matricula") Matriculas matricula,
+            BindingResult result,
+            RedirectAttributes redirectAttributes,
             @RequestParam("seccion.nombreSeccion") String nombreSeccion,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+            @RequestParam(required = false) Integer anioEscolar) {
 
-        // Settear el año y sección, ya que la vista los envia con formato distinto
-        matricula.setSeccion(seccionesService.obtenerSeccionPorNombreYGrado(nombreSeccion, matricula.getGrado()));
-        matricula.setAnioEscolar(matricula.getFechaMatricula().getYear());
+        // Valdiaciónes
+
+        if (result.hasErrors()) {
+        // Capturamos el mensaje de error específico
+        String mensajeError = result.getFieldError("estudiante.dni").getDefaultMessage();
+
+        // Pasamos el mensaje al modelo para mostrarlo en un modal
+        redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+        redirectAttributes.addFlashAttribute("mensaje", mensajeError);
+
+        return "redirect:/matriculas/matricular"; // vuelve a la vista con el modal
+    }
+
+        if (matricula.getEstudiante() == null) {
+
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", "Busque un alumno registrado para continuar");
+        }
 
         // proceso de matriculación
         try {
-            String matricular = matriculasService.matricularEstudiante(matricula.getEstudiante().getDni(), matricula);
+
+            // Settear seccion en la matricula
+            matricula.setSeccion(seccionesService.obtenerSeccionPorNombreYGrado(nombreSeccion, matricula.getGrado()));
+
+            // Settear año escolar
+            matricula.setAnioEscolar(matricula.getFechaMatricula().getYear());
+
+            System.out.println("datos del estudiante: " + matricula.getEstudiante().getNombre() + " "
+                    + matricula.getSeccion().getCapacidad() + " " + matricula.getSeccion().getIdSeccion());
+            String matricular = matriculasService.matricularEstudiante(
+                    matricula.getEstudiante().getDni(),
+                    matricula);
 
             /*
              * if (matricular.equals("YA_MATRICULADO")) {
@@ -129,74 +154,113 @@ public class MatricularEstudianteController {
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
         }
 
-        model.addAttribute("matricula", matricula);
+        // redirectAttributes.addFlashAttribute("matricula", matricula);
 
         return "redirect:/matriculas/matricular";
     }
 
     // Editar una Matricula
     @GetMapping("/editar/{id}")
-    public String editar(   @PathVariable Integer id,
-                            Model model,
-                            @RequestParam(defaultValue = "0") int page,
-                            @SessionAttribute(value = "anioSeleccionado", required = false) Integer anioEscolar,
-                            @SessionAttribute(value = "gradoSeleccionado", required = false) Integer grado,
-                            @SessionAttribute(value = "seccionSeleccionada", required = false) String seccion) {
+    public String editar(@PathVariable Integer id,
+            Model model) {
 
         Matriculas matricula = matriculasService.obtenerMatriculaPorId(id)
                 .orElseThrow(() -> new RuntimeException("Matrícula no encontrada"));
 
-        Pageable pageable = PageRequest.of(page, 10);
-        Page<Matriculas> pagina = matriculasService.filtrar(anioEscolar, grado, seccion, pageable);
-
         model.addAttribute("matricula", matricula);
-        model.addAttribute("pagina", pagina);
-        model.addAttribute("estudiantesMatriculados", pagina.getContent());
 
-        return "matricular";
+        return mostrarFormularioMatriculacion(
+                null,
+                null,
+                null,
+                0,
+                model);
     }
 
     // Eliminar una matricula (Soft Delete)
     @GetMapping("/eliminar/{id}")
-    public String eliminarMatricula(@PathVariable int id, Matriculas matricula,
+    public String eliminarMatricula(
+            @PathVariable Integer id,
             RedirectAttributes redirectAttributes) {
-        matriculasService.eliminarMatricula(id);
+
+        try {
+
+            matriculasService.eliminarMatricula(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoModal",
+                    "notificacion");
+
+            redirectAttributes.addFlashAttribute(
+                    "mensaje",
+                    "Matrícula eliminada correctamente");
+
+        } catch (RuntimeException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoModal",
+                    "notificacion");
+
+            redirectAttributes.addFlashAttribute(
+                    "mensaje",
+                    e.getMessage());
+        }
 
         return "redirect:/matriculas/matricular";
     }
 
     // Buscar estudiante
     @GetMapping("/buscar")
-    public String buscarEstudiante(@RequestParam String dni, RedirectAttributes redirectAttributes) {
+    public String buscarEstudiante(
+            @RequestParam String dni,
+            RedirectAttributes redirectAttributes) {
 
-        Integer anioEscolarActual = LocalDate.now().getYear();
-        Matriculas matricula = new Matriculas();
-        Estudiantes estudiante;
+        Integer anioActual = LocalDate.now().getYear();
 
-        // Verifica que exista el estudiante
         try {
-            estudiante = estudiantesService.obtenerEstudiantePorDni(dni);
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
-            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
-            return "redirect:/matriculas/matricular";
+
+            Estudiantes estudiante = estudiantesService.obtenerEstudiantePorDni(dni);
+
+            Matriculas matricula;
+
+            Optional<Matriculas> existente = matriculasService.obtenerEstudiantesMatriculadosPorAño(
+                    estudiante,
+                    anioActual);
+
+            if (existente.isPresent() &&
+                    existente.get().isEstadoRegistro()) {
+
+                matricula = existente.get();
+
+                redirectAttributes.addFlashAttribute(
+                        "tipoModal",
+                        "confirmacion");
+
+                redirectAttributes.addFlashAttribute(
+                        "mensaje",
+                        "El estudiante ya está matriculado. ¿Desea editar la matrícula?");
+
+            } else {
+
+                matricula = new Matriculas();
+                matricula.setEstudiante(estudiante);
+            }
+
+            redirectAttributes.addFlashAttribute(
+                    "matricula",
+                    matricula);
+
+        } catch (RuntimeException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoModal",
+                    "notificacion");
+
+            redirectAttributes.addFlashAttribute(
+                    "mensaje",
+                    e.getMessage());
         }
 
-        // Verifica si ya está matriculado en el presente año
-        Optional<Matriculas> matriculaExistente = matriculasService.obtenerEstudiantesMatriculadosPorAño(estudiante,
-                anioEscolarActual);
-
-        if (matriculaExistente.isPresent() && matriculaExistente.get().isEstadoRegistro()) {
-            matricula = matriculaExistente.get();
-            //redirectAttributes.addFlashAttribute("matricula", matricula);
-            redirectAttributes.addFlashAttribute("tipoModal", "confirmacion");
-            redirectAttributes.addFlashAttribute("mensaje", "El estudiante ya está matriculado. ¿Desea editar la matrícula?");
-        } else {
-            matricula.setEstudiante(estudiante);
-        }
-
-        redirectAttributes.addFlashAttribute("matricula", matricula);
-        redirectAttributes.addAttribute("id", matricula.getIdMatricula());
         return "redirect:/matriculas/matricular";
     }
 }
