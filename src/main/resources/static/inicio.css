@@ -1,0 +1,93 @@
+/* Área principal dejando espacio al menú */
+#inicio {
+    margin-left: 260px;
+    height: 100vh;
+    background: linear-gradient(
+        rgba(0, 41, 90, 0.85),
+        rgba(0, 41, 90, 0.85)
+    ),
+    url("/images/colegio.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f4f4f4;
+    text-align: center;
+}
+
+
+/* Caja de bienvenida */
+.overlay {
+    max-width: 700px;
+    padding: 40px;
+}
+
+
+/* Logo */
+.logo-principal {
+    width: 130px;
+    height: auto;
+    margin: auto;
+    margin-bottom: 25px;
+
+
+    filter: drop-shadow(0 0 15px rgba(0,0,0,.5));
+}
+
+
+/* Título */
+#inicio h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+
+/* Texto */
+.mensaje {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+
+/* Usuario */
+.usuario {
+    font-size: 1rem;
+    background-color: rgba(255,255,255,.15);
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 30px;
+}
+
+
+/* Rol */
+.usuario span {
+    color: #33C52E;
+    font-weight: bold;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    #inicio {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .logo-principal {
+        width: 130px;
+    }
+
+    #inicio h1 {
+        font-size: 1.8rem;
+    }
+
+    .mensaje {
+        font-size: 1rem;
+    }
+}

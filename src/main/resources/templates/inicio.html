@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Sistema de Gestión Escolar</title>
+
+    <link rel="stylesheet" th:href="@{/reset.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/menu.css}">
+    <link rel="stylesheet" th:href="@{/inicio.css}">
+</head>
+
+<body>
+
+    <!-- Menú lateral -->
+    <div th:replace="~{fragments/menu :: menu}"></div>
+
+    <!-- Contenido principal -->
+    <main id="inicio">
+
+        <div class="overlay">
+
+            <img src="/logo2.png" alt="Logo del colegio" class="logo-principal">
+
+            <h1>
+                Bienvenido al Sistema de Gestión Escolar
+            </h1>
+
+            <p class="mensaje">
+                Bienvenido a una comunidad educativa dedicada al aprendizaje, la innovación y el desarrollo de las
+                futuras generaciones.
+            </p>
+
+            <p class="usuario">
+                Sesión iniciada como:
+                <span th:text="${session.usuarioLogeado.rol}">
+                    Administrador
+                </span>
+            </p>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
