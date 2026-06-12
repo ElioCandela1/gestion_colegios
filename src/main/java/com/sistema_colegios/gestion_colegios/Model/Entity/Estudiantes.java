@@ -118,9 +118,14 @@ public class Estudiantes extends AuditoriaEntity {
     }
 
     public void setDni(String dni) {
-        if (dni != null && !dni.matches("\\d{8}")) {
+        if (dni == null) {
+            throw new IllegalArgumentException("Debe ingresar un DNI");
+        }
+
+        if (!dni.matches("\\d{8}")) {
             throw new IllegalArgumentException("El DNI debe contener exactamente 8 dígitos.");
         }
+        
         this.dni = dni;
     }
 
