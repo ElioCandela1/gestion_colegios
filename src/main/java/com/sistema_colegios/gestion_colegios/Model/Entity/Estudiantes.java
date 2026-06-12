@@ -2,11 +2,13 @@ package com.sistema_colegios.gestion_colegios.Model.Entity;
 
 import java.time.LocalDate;
 
+import com.sistema_colegios.gestion_colegios.Model.Service.UsuarioGenerable;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "estudiante")
-public class Estudiantes extends AuditoriaEntity {
+public class Estudiantes extends AuditoriaEntity implements UsuarioGenerable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -125,7 +127,7 @@ public class Estudiantes extends AuditoriaEntity {
         if (!dni.matches("\\d{8}")) {
             throw new IllegalArgumentException("El DNI debe contener exactamente 8 dígitos.");
         }
-        
+
         this.dni = dni;
     }
 
@@ -170,6 +172,12 @@ public class Estudiantes extends AuditoriaEntity {
 
     public void setApoderado(Apoderados apoderado) {
         this.apoderado = apoderado;
+    }
+
+    @Override
+    public String getRol() {
+
+        return "ALUMNO";
     }
 
     

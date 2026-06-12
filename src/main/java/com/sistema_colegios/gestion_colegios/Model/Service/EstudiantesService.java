@@ -24,6 +24,10 @@ public class EstudiantesService {
     private AuditorAware<Usuarios> auditorAware;
     @Autowired
     private ApoderadosService apoderadosService;
+    @Autowired
+    private UsuariosService usuariosService;
+    @Autowired
+    private EmailService emailService;
 
  
     public String guardarEstudiante(Estudiantes estudiante) {
@@ -59,6 +63,7 @@ public class EstudiantesService {
             estudianteExistente.setApoderado(apoderado);
 
             estudiantesRepository.save(estudianteExistente);
+            //emailService.enviarCredenciales(estudianteExistente.getCorreo(), estudianteExistente., null);
 
             return "Estudiante reactivado exitosamente";
             }
@@ -66,7 +71,8 @@ public class EstudiantesService {
 
         // No existe el estudiante, guardar uno nuevo
         estudiantesRepository.save(estudiante);
-
+        usuariosService.crearUsuario(estudiante);
+        
         return "Estudiante guardado exitosamente";
     }
 

@@ -1,10 +1,12 @@
 package com.sistema_colegios.gestion_colegios.Model.Entity;
 
+import com.sistema_colegios.gestion_colegios.Model.Service.UsuarioGenerable;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "docente")
-public class Docentes extends AuditoriaEntity {
+public class Docentes extends AuditoriaEntity implements UsuarioGenerable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -102,6 +104,18 @@ public class Docentes extends AuditoriaEntity {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    @Override
+    public String getNombre() {
+       
+        return nombres;
+    }
+
+    @Override
+    public String getRol() {
+        
+        return "DOCENTE";
     }
 
     
