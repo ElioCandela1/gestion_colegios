@@ -15,7 +15,7 @@ public class GenerarCodigoApoderado implements GenerarCodigoUsuario {
     @Override
     public String generarCodigo() {
         
-        return "A" + apoderadosService.obtenerSiguienteId();
+        return "P" + apoderadosService.obtenerSiguienteId();
     }
 
 }

@@ -1,6 +1,5 @@
 package com.sistema_colegios.gestion_colegios.Controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -50,17 +49,17 @@ public class EstudiantesController {
 
     // Mostrar la ventana de Gestion de Estudiantes
     @GetMapping("/gestionEstudiantes")
-    public String mostrarGestionEstudiantes(Model model, @RequestParam(defaultValue = "0") int page, @ModelAttribute("estudiante") Estudiantes estudiante) {
+    public String mostrarGestionEstudiantes(Model model, @RequestParam(defaultValue = "0") int page,
+            @ModelAttribute("estudiante") Estudiantes estudiante) {
 
         Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
 
-        
-    // Solo se inicializa apoderado si el estudiante está vacío
-    if (estudiante.getApoderado() == null) {
-        estudiante.setApoderado(new Apoderados());
-    }
+        // Solo se inicializa apoderado si el estudiante está vacío
+        if (estudiante.getApoderado() == null) {
+            estudiante.setApoderado(new Apoderados());
+        }
 
-    model.addAttribute("estudiante", estudiante);
+        model.addAttribute("estudiante", estudiante);
 
         model.addAttribute("estudiantes", pagina.getContent()); // lista de estudiantes
         // model.addAttribute("paginaActual", page);
@@ -71,7 +70,6 @@ public class EstudiantesController {
         return "estudianteform";
     }
 
-    
     // Generar codigo para nuevo estudiante
     @GetMapping("/nuevo")
     public String nuevoEstudiante(RedirectAttributes redirectAttributes, Estudiantes estudiante) {
@@ -87,7 +85,19 @@ public class EstudiantesController {
             RedirectAttributes redirectAttributes,
             @RequestParam(defaultValue = "0") int page) {
 
+        // verificar codigo del estudiante
+
+        if (estudiante.getCodigo() == null || estudiante.getCodigo().isBlank()) {
+
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", "Debe generar un código");
+            redirectAttributes.addFlashAttribute(estudiante);
+            return "redirect:/estudiantes/gestionEstudiantes";
+        }
+
         Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
+
+        System.out.println("Dni del estudiante: " + estudiante.getDni());
 
         try {
             String guardar = estudiantesService.guardarEstudiante(estudiante);
@@ -141,23 +151,28 @@ public class EstudiantesController {
             Model model,
             @RequestParam(defaultValue = "0") int page) {
 
-        Page<Estudiantes> pagina = estudiantesService.obtenerEstudiantePorDniPage(dni, page);
-
-        model.addAttribute("estudiantes", pagina.getContent());
-        model.addAttribute("pagina", pagina);
+        try {
+            Page<Estudiantes> pagina = estudiantesService.obtenerEstudiantePorDniPage(dni, page);
+            model.addAttribute("estudiantes", pagina.getContent());
+            model.addAttribute("pagina", pagina);
+        } catch (Exception e) {
+            model.addAttribute("tipoModal", "notificacion");
+            model.addAttribute("mensaje", e);
+        }
 
         return "estudianteform";
     }
 
     // Buscar apoderado
     @GetMapping("/buscarApoderado")
-    public String buscarApoderado(@RequestParam("dniApoderado") String dniApoderado, RedirectAttributes redirectAttributes,
+    public String buscarApoderado(@RequestParam("dniApoderado") String dniApoderado,
+            RedirectAttributes redirectAttributes,
             @ModelAttribute Estudiantes estudiante) {
 
         Apoderados apoderado;
         try {
             apoderado = apoderadosService.obtenerApoderadosPorDni(dniApoderado);
-            
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
@@ -165,8 +180,7 @@ public class EstudiantesController {
             return "redirect:/estudiantes/gestionEstudiantes";
         }
 
-        estudiante.setApoderado(apoderado);        
-        System.out.println("Id del apoderad: " + apoderado.getIdApoderado() + "nombre: " + apoderado.getNombre());
+        estudiante.setApoderado(apoderado);
         redirectAttributes.addFlashAttribute("estudiante", estudiante);
         redirectAttributes.addFlashAttribute("apoderado", apoderado);
 

@@ -4,14 +4,13 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -45,13 +44,12 @@ public abstract class AuditoriaEntity {
     @Column(name = "estado_registro")
     private boolean estadoRegistro = true;
 
-    
-
     public AuditoriaEntity() {
     }
 
     public AuditoriaEntity(Usuarios creadoPor, Usuarios modificadoPor, Usuarios eliminadoPor,
-            LocalDateTime fechaCreacion, LocalDateTime fechaModificacion, LocalDateTime fechaEliminacion, boolean estadoRegistro) {
+            LocalDateTime fechaCreacion, LocalDateTime fechaModificacion, LocalDateTime fechaEliminacion,
+            boolean estadoRegistro) {
         this.creadoPor = creadoPor;
         this.modificadoPor = modificadoPor;
         this.eliminadoPor = eliminadoPor;
@@ -61,7 +59,7 @@ public abstract class AuditoriaEntity {
         this.estadoRegistro = estadoRegistro;
     }
 
-    public void softDelete(Usuarios usuarioActual){
+    public void softDelete(Usuarios usuarioActual) {
 
         this.estadoRegistro = false;
         this.fechaEliminacion = LocalDateTime.now();
@@ -125,7 +123,4 @@ public abstract class AuditoriaEntity {
         this.estadoRegistro = estadoRegistro;
     }
 
-    
-
-    
 }

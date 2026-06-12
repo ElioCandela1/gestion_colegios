@@ -10,5 +10,5 @@ public interface UsuarioGenerable {
 
     String getCorreo();
 
-    String getRol();
+    Rol getRol();
 }

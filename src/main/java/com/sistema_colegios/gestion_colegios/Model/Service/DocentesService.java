@@ -21,108 +21,121 @@ public class DocentesService {
     DocentesRepository docentesRepository;
     @Autowired
     private AuditorAware<Usuarios> auditorAware;
+    @Autowired
+    private UsuariosService usuariosService;
+    @Autowired
+    private EmailService emailService;
 
     public String guardarDocentes(Docentes docente) {
 
-    Docentes docenteExistente = null;
+        Docentes docenteExistente = null;
 
-    // Buscar si existe el docente por DNI
-    try {
-        docenteExistente = obtenerDocentePorDni(docente.getDni());
-    } catch (Exception e) {
-        // Ignorar excepción si no existe
-    }
-
-    if (docenteExistente != null) {
-        if (docenteExistente.isEstadoRegistro()) {
-            // Actualizar datos del docente
-            try {
-                actualizarDocentes(docente);
-            } catch (Exception e) {
-                return e.getMessage();
-            }
-            return "Docente Actualizado Correctamente";
-        } else {
-            // Reactivar docente eliminado
-            docenteExistente.setEstadoRegistro(true);
-            copiarDatos(docente, docenteExistente);
-            docentesRepository.save(docenteExistente);
-            return "Docente Reactivado Exitosamente";
+        // Buscar si existe el docente por DNI
+        try {
+            docenteExistente = obtenerDocentePorDni(docente.getDni());
+        } catch (Exception e) {
+            // Ignorar excepción si no existe
         }
-    }
 
-    // Guardar nuevo docente
-    docentesRepository.save(docente);
-    return "Docente Guardado Con Éxito";
-}
+        if (docenteExistente != null) {
+            if (docenteExistente.isEstadoRegistro()) {
+                // Actualizar datos del docente
+                try {
+                    actualizarDocentes(docente);
+                } catch (Exception e) {
+                    return e.getMessage();
+                }
+                return "Docente Actualizado Correctamente";
+            } else {
+                // Reactivar docente eliminado
+                docenteExistente.setEstadoRegistro(true);
+                copiarDatos(docente, docenteExistente);
+                docentesRepository.save(docenteExistente);
+
+                Usuarios user = usuariosService.obtenerUsuarioPorIdPersona(docenteExistente.getId());
+                emailService.enviarCredenciales(docenteExistente.getCorreo(), user.getUsername(), null);
+
+                return "Docente Reactivado Exitosamente";
+            }
+        }
+
+        // Guardar nuevo docente
+        docentesRepository.save(docente);
+
+        Usuarios usuario = new Usuarios();
+        usuariosService.crearUsuario(docente, docente);
+        usuario.setPersona(docente);
+
+        return "Docente Guardado Con Éxito";
+    }
 
     public Docentes obtenerDocentePorId(int id) {
-    return docentesRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Docente no encontrado con id: " + id));
-}
+        return docentesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Docente no encontrado con id: " + id));
+    }
 
     public Docentes obtenerDocentePorDni(String dni) {
-    return docentesRepository.findByDni(dni).orElse(null);
-}
+        return docentesRepository.findByDni(dni).orElse(null);
+    }
 
     public Page<Docentes> obtenerDocentesPorDniPage(String dni, int numeroPagina) {
-    
-    PageRequest pageable = PageRequest.of(numeroPagina, 10);
 
-    return docentesRepository.findByDniPage(dni, pageable);
-}
+        PageRequest pageable = PageRequest.of(numeroPagina, 10);
+
+        return docentesRepository.findByDniPage(dni, pageable);
+    }
 
     public String eliminarDocentes(Integer id) {
 
-    // Buscar docente por id
-    Docentes docente = docentesRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Docente No Encontrado"));
+        // Buscar docente por id
+        Docentes docente = docentesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Docente No Encontrado"));
 
-    // Soft Delete
-    Usuarios usuarioActual = auditorAware.getCurrentAuditor().orElse(null);
-    docente.softDelete(usuarioActual);
+        // Soft Delete
+        Usuarios usuarioActual = auditorAware.getCurrentAuditor().orElse(null);
+        docente.softDelete(usuarioActual);
 
-    // Guardar nuevamente
-    docentesRepository.save(docente);
+        // Guardar nuevamente
+        docentesRepository.save(docente);
 
-    return "Docente Eliminado Con Éxito";
-}
-
-    public Docentes actualizarDocentes(Docentes docente) {
-    
-    Docentes docenteAnterior = obtenerDocentePorDni(docente.getDni());
-
-    if (docenteAnterior == null) {
-        throw new RuntimeException("Docente no encontrado");
+        return "Docente Eliminado Con Éxito";
     }
 
-    // Actualizar los atributos
-    copiarDatos(docente, docenteAnterior);
+    public Docentes actualizarDocentes(Docentes docente) {
 
-    return docentesRepository.save(docenteAnterior);
-}
+        Docentes docenteAnterior = obtenerDocentePorDni(docente.getDni());
+
+        if (docenteAnterior == null) {
+            throw new RuntimeException("Docente no encontrado");
+        }
+
+        // Actualizar los atributos
+        copiarDatos(docente, docenteAnterior);
+
+        return docentesRepository.save(docenteAnterior);
+    }
 
     public List<Docentes> listarDocentes() {
-    return docentesRepository.findAll();
-}
+        return docentesRepository.findAll();
+    }
 
     public int obtenerSiguienteId() {
-    return (int) docentesRepository.count()+1;  
+        return (int) docentesRepository.count() + 1;
     }
 
     public Page<Docentes> listarDocentesActivos(int numeroPagina) {
-    Pageable pageable = PageRequest.of(numeroPagina, 10);
-    return docentesRepository.findAllPage(pageable);
-}
+        Pageable pageable = PageRequest.of(numeroPagina, 10);
+        return docentesRepository.findAllPage(pageable);
+    }
 
     private void copiarDatos(Docentes origen, Docentes destino) {
-    destino.setNombres(origen.getNombres());
-    destino.setPrimerApellido(origen.getPrimerApellido());
-    destino.setSegundoApellido(origen.getSegundoApellido());
-    destino.setDni(origen.getDni());
-    destino.setEspecialidad(origen.getEspecialidad());
-    destino.setTelefono(origen.getTelefono());
-    destino.setCorreo(origen.getCorreo());
-}
+        destino.setNombre(origen.getNombre());
+        destino.setPrimerApellido(origen.getPrimerApellido());
+        destino.setSegundoApellido(origen.getSegundoApellido());
+        destino.setDni(origen.getDni());
+        destino.setEspecialidad(origen.getEspecialidad());
+        destino.setTelefono(origen.getTelefono());
+        destino.setCorreo(origen.getCorreo());
+    }
 
 }

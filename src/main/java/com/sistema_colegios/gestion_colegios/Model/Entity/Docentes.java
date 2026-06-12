@@ -1,77 +1,28 @@
 package com.sistema_colegios.gestion_colegios.Model.Entity;
 
+import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
 import com.sistema_colegios.gestion_colegios.Model.Service.UsuarioGenerable;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "docente")
-public class Docentes extends AuditoriaEntity implements UsuarioGenerable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_docente")
-    private Integer idDocente;
-
-    @Column(name = "codigo", unique = true, nullable = false)
-    private String codigo;
-
-    @Column(name = "nombres", nullable = false)
-    private String nombres;
-
-    @Column(name = "primer_apellido", nullable = false)
-    private String primerApellido;
-
-    @Column(name = "segundo_apellido")
-    private String segundoApellido;
-
-    @Column(unique = true, nullable = false)
-    private String dni;
+public class Docentes extends Persona implements UsuarioGenerable {
 
     private String especialidad;
 
-    private String telefono;
-
-    private String correo;
-
-    public Integer getIdDocente() {
-        return idDocente;
+    public Docentes(){
+        
     }
 
-    public void setIdDocente(Integer idDocente) {
-        this.idDocente = idDocente;
+    public Docentes(String especialidad) {
+        this.especialidad = especialidad;
     }
 
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getPrimerApellido() {
-        return primerApellido;
-    }
-
-    public void setPrimerApellido(String primerApellido) {
-        this.primerApellido = primerApellido;
-    }
-
-    public String getSegundoApellido() {
-        return segundoApellido;
-    }
-
-    public void setSegundoApellido(String segundoApellido) {
-        this.segundoApellido = segundoApellido;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
+    public Docentes(int id, String codigo, String nombre, String primerApellido, String segundoApellido, String dni,
+            String telefono, String correo, String especialidad) {
+        super(id, codigo, nombre, primerApellido, segundoApellido, dni, telefono, correo);
+        this.especialidad = especialidad;
     }
 
     public String getEspecialidad() {
@@ -82,40 +33,10 @@ public class Docentes extends AuditoriaEntity implements UsuarioGenerable {
         this.especialidad = especialidad;
     }
 
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     @Override
-    public String getNombre() {
-       
-        return nombres;
-    }
-
-    @Override
-    public String getRol() {
+    public Rol getRol() {
         
-        return "DOCENTE";
+        return Rol.DOCENTE;
     }
 
     

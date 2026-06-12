@@ -21,5 +21,7 @@ public class AuditorAwareImpl implements AuditorAware<Usuarios> {
         Usuarios usuario = (Usuarios) session.getAttribute("usuarioLogeado");
         return Optional.ofNullable(usuario);
     }
+
+    
 }
 

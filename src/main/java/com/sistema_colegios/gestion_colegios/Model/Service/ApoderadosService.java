@@ -20,6 +20,9 @@ public class ApoderadosService {
     private ApoderadosRepository apoderadosRepository;
     @Autowired
     private AuditorAware<Usuarios> auditorAware;
+    private UsuariosService usuariosService;
+    @Autowired
+    private EmailService emailService;
 
     public String guardarApoderados(Apoderados apoderado) {
 
@@ -49,15 +52,20 @@ public class ApoderadosService {
                 // Existe pero estaba eliminado, reactivar
                 apoderadoExistente.setEstadoRegistro(true);
                 copiarDatos(apoderado, apoderadoExistente);
-                /*apoderadoExistente.setNombre(apoderado.getNombre());
-                apoderadoExistente.setPrimerApellido(apoderado.getPrimerApellido());
-                apoderadoExistente.setSegundoApellido(apoderado.getSegundoApellido());
-                apoderadoExistente.setDni(apoderado.getDni());
-                apoderadoExistente.setTelefono(apoderado.getTelefono());
-                apoderadoExistente.setCorreo(apoderado.getCorreo());
-                apoderadoExistente.setParentesco(apoderado.getParentesco());*/
+                /*
+                 * apoderadoExistente.setNombre(apoderado.getNombre());
+                 * apoderadoExistente.setPrimerApellido(apoderado.getPrimerApellido());
+                 * apoderadoExistente.setSegundoApellido(apoderado.getSegundoApellido());
+                 * apoderadoExistente.setDni(apoderado.getDni());
+                 * apoderadoExistente.setTelefono(apoderado.getTelefono());
+                 * apoderadoExistente.setCorreo(apoderado.getCorreo());
+                 * apoderadoExistente.setParentesco(apoderado.getParentesco());
+                 */
 
                 apoderadosRepository.save(apoderadoExistente);
+
+            Usuarios user = usuariosService.obtenerUsuarioPorIdPersona(apoderadoExistente.getId());
+            emailService.enviarCredenciales(apoderadoExistente.getCorreo(), user.getUsername() , null);
 
                 return "Apoderado Reactivado Exitosamente";
             }
@@ -67,10 +75,14 @@ public class ApoderadosService {
         // No existe el apoderado, guardar uno nuevo
         apoderadosRepository.save(apoderado);
 
+        Usuarios usuario = new Usuarios();
+        usuariosService.crearUsuario(apoderado, apoderado);
+        usuario.setPersona(apoderado);
+
         return "Apoderado Guardado Con Exito";
     }
 
-    public Apoderados obtenerApoderadosPorId(int id){
+    public Apoderados obtenerApoderadosPorId(int id) {
         return apoderadosRepository.findById(id).orElseThrow(null);
     }
 
@@ -79,7 +91,7 @@ public class ApoderadosService {
     }
 
     public Page<Apoderados> obtenerApoderadosPorDniPage(String dni, int numeroPagina) {
-        
+
         Pageable pageable = PageRequest.of(numeroPagina, 10);
 
         return apoderadosRepository.findByDniPage(dni, pageable);
@@ -102,7 +114,7 @@ public class ApoderadosService {
     }
 
     public Apoderados actualizarApoderados(Apoderados apoderados) {
-        
+
         Apoderados apoderadoAnterior = obtenerApoderadosPorDni(apoderados.getDni());
 
         if (apoderadoAnterior == null) {
@@ -119,11 +131,11 @@ public class ApoderadosService {
         return apoderadosRepository.findAll();
     }
 
-    public int obtenerSiguienteId(){
-        return (int) apoderadosRepository.count()+1;
+    public int obtenerSiguienteId() {
+        return (int) apoderadosRepository.count() + 1;
     }
 
-    public Page<Apoderados> listarApoderadosActivos(int numeroPagina){
+    public Page<Apoderados> listarApoderadosActivos(int numeroPagina) {
         Pageable pageable = PageRequest.of(numeroPagina, 10);
         return apoderadosRepository.findAllPage(pageable);
     }
@@ -135,6 +147,6 @@ public class ApoderadosService {
         destino.setDni(origen.getDni());
         destino.setTelefono(origen.getTelefono());
         destino.setCorreo(origen.getCorreo());
-        //destino.setParentesco(origen.getParentesco());
+        // destino.setParentesco(origen.getParentesco());
     }
 }

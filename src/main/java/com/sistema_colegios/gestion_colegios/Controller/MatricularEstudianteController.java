@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Page;
@@ -92,23 +91,14 @@ public class MatricularEstudianteController {
     @PostMapping("/matricular")
     public String matricularEstudiante(
             @ModelAttribute("matricula") Matriculas matricula,
-            BindingResult result,
             RedirectAttributes redirectAttributes,
             @RequestParam("seccion.nombreSeccion") String nombreSeccion,
             @RequestParam(required = false) Integer anioEscolar) {
 
+
+
         // Valdiaciónes
-
-        if (result.hasErrors()) {
-        // Capturamos el mensaje de error específico
-        String mensajeError = result.getFieldError("estudiante.dni").getDefaultMessage();
-
-        // Pasamos el mensaje al modelo para mostrarlo en un modal
-        redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
-        redirectAttributes.addFlashAttribute("mensaje", mensajeError);
-
-        return "redirect:/matriculas/matricular"; // vuelve a la vista con el modal
-    }
+                System.out.println("Seccion " + nombreSeccion);
 
         if (matricula.getEstudiante() == null) {
 

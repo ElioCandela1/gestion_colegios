@@ -10,14 +10,14 @@
 
                 <!-- Texto centrado -->
                 <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="90"
-                    font-weight="lighter" fill="white"
-                    th:text="${#strings.substring(session.usuarioLogeado.username.toUpperCase(),0,1)}">
-                </text>
+      font-weight="lighter" fill="white"
+      th:text="${#strings.substring(session.usuarioLogeado.persona.nombre.toUpperCase(),0,1)}">
+</text>
             </svg>
             <figcaption>Icono o foto de usuario logeado</figcaption>
         </figure>
 
-        <p th:text="${session.usuarioLogeado.username}"></p>
+       <p th:text="${session.usuarioLogeado.persona.nombre + ' ' + session.usuarioLogeado.persona.primerApellido}"></p>
         <p th:text="${session.usuarioLogeado.rol}"></p>
 
     </div>
@@ -27,49 +27,49 @@
         <ul class="menu-options">
 
 
-            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'ADMIN'}">
                 <a th:href="@{/pagos}">
                     Pagos
                 </a>
             </li>
 
-            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'ADMIN'}">
                 <a th:href="@{/matriculas/matricular}">
                     Matriculación
                 </a>
             </li>
 
-            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'ADMIN'}">
                 <a th:href="@{/estudiantes/gestionEstudiantes}">
                     Gestion de Estudiantes
                 </a>
             </li>
 
-            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'ADMIN'}">
                 <a th:href="@{/apoderados/gestionApoderados}">
                     Gestion de Apoderados
                 </a>
             </li>
 
-            <li th:if="${session.usuarioLogeado.rol == 'ADMIN'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'ADMIN'}">
                 <a th:href="@{/docentes/gestionDocentes}">
                     Gestion de Docentes
                 </a>
             </li>
 
-            <li th:if="${session.usuarioLogeado.rol == 'DOCENTE'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'DOCENTE'}">
                 <a th:href="@{/notas}">
                     Registro de notas
                 </a>
             </li>
 
-            <li th:if="${session.usuarioLogeado.rol == 'ALUMNO' or session.usuarioLogeado.rol == 'APODERADO'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'ESTUDIANTE' or session.usuarioLogeado.rol.name() == 'APODERADO'}">
                 <a th:href="@{/misnotas}">
                     Mis notas
                 </a>
             </li>
 
-            <li th:if="${session.usuarioLogeado.rol == 'ALUMNO' or session.usuarioLogeado.rol == 'APODERADO'}">
+            <li th:if="${session.usuarioLogeado.rol.name() == 'ESTUDIANTE' or session.usuarioLogeado.rol.name() == 'APODERADO'}">
                 <a th:href="@{/mispagos}">
                     Mis pagos
                 </a>

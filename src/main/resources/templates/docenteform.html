@@ -33,7 +33,7 @@
 
             <form th:action="@{/docentes/guardar}" th:object="${docente}" method="post">
 
-                <input type="hidden" th:field="*{idDocente}">
+                <input type="hidden" th:field="*{id}">
 
                 <div class="form-grid">
 
@@ -45,7 +45,7 @@
 
                     <div class="form-group">
                         <label>Nombres</label>
-                        <input type="text" th:field="*{nombres}" required>
+                        <input type="text" th:field="*{nombre}" required>
                     </div>
 
                     <div class="form-group">
@@ -61,6 +61,12 @@
                     <div class="form-group">
                         <label>DNI</label>
                         <input type="text" maxlength="8" th:field="*{dni}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" name="fechaNacimiento"
+                            th:value="${#temporals.format(docente.fechaNacimiento, 'yyyy-MM-dd')}" required>
                     </div>
 
                     <!-- <div class="form-group">
@@ -166,9 +172,9 @@
 
                     <tr th:each="d : ${docentes}">
 
-                        <td th:text="${d.idDocente}"></td>
+                        <td th:text="${d.id}"></td>
 
-                        <td th:text="${d.nombres}"></td>
+                        <td th:text="${d.nombre}"></td>
 
                         <td th:text="${d.primerApellido + ' ' + d.segundoApellido}"></td>
 
@@ -182,11 +188,11 @@
 
                         <td>
 
-                            <a th:href="@{/docentes/editar/{id}(id=${d.idDocente})}">
+                            <a th:href="@{/docentes/editar/{id}(id=${d.id})}">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
 
-                            <a th:href="@{/docentes/eliminar/{id}(id=${d.idDocente})}"
+                            <a th:href="@{/docentes/eliminar/{id}(id=${d.id})}"
                                 onclick="return confirm('¿Desea eliminar este docente?')">
 
                                 <i class="fa-solid fa-trash"></i>

@@ -2,13 +2,16 @@ package com.sistema_colegios.gestion_colegios.Model.Entity;
 
 import java.time.LocalDateTime;
 
+import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -27,13 +30,18 @@ public class Usuarios {
     @Column(nullable = false)
     private String password;
 
-    private String rol;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Rol rol;
 
     private Boolean estado;
 
     @Column(name = "ultimo_acceso")
     private LocalDateTime ultimoAcceso;
 
+    @OneToOne
+    @JoinColumn(name = "id_persona", unique = true, nullable = false)
+    private Persona persona;
 
 
     public Integer getIdUsuario() {
@@ -60,11 +68,11 @@ public class Usuarios {
         this.password = password;
     }
 
-    public String getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
 
@@ -74,6 +82,22 @@ public class Usuarios {
 
     public void setEstado(Boolean estado) {
         this.estado = estado;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
+
+    public LocalDateTime getUltimoAcceso() {
+        return ultimoAcceso;
+    }
+
+    public void setUltimoAcceso(LocalDateTime ultimoAcceso) {
+        this.ultimoAcceso = ultimoAcceso;
+    }
+
+    public Persona getPersona() {
+        return persona;
     }
 
     

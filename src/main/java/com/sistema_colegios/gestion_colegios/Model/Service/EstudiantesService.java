@@ -59,11 +59,12 @@ public class EstudiantesService {
             estudianteExistente.setTelefono(estudiante.getTelefono());
             estudianteExistente.setCorreo(estudiante.getCorreo());
 
-            Apoderados apoderado = apoderadosService.obtenerApoderadosPorId(estudiante.getApoderado().getIdApoderado()); // Buscar apoderado en la DB
+            Apoderados apoderado = apoderadosService.obtenerApoderadosPorId(estudiante.getApoderado().getId()); // Buscar apoderado en la DB
             estudianteExistente.setApoderado(apoderado);
 
             estudiantesRepository.save(estudianteExistente);
-            //emailService.enviarCredenciales(estudianteExistente.getCorreo(), estudianteExistente., null);
+            Usuarios user = usuariosService.obtenerUsuarioPorIdPersona(estudianteExistente.getId());
+            emailService.enviarCredenciales(estudianteExistente.getCorreo(), user.getUsername() , null);
 
             return "Estudiante reactivado exitosamente";
             }
@@ -71,7 +72,10 @@ public class EstudiantesService {
 
         // No existe el estudiante, guardar uno nuevo
         estudiantesRepository.save(estudiante);
-        usuariosService.crearUsuario(estudiante);
+        Usuarios usuario = new Usuarios();
+        usuariosService.crearUsuario(estudiante, estudiante);
+        usuario.setPersona(estudiante);
+        
         
         return "Estudiante guardado exitosamente";
     }
@@ -132,7 +136,7 @@ public class EstudiantesService {
     estudianteAnt.setTelefono(estudiante.getTelefono());
     estudianteAnt.setCorreo(estudiante.getCorreo());
     
-    Apoderados apoderado = apoderadosService.obtenerApoderadosPorId(estudiante.getApoderado().getIdApoderado()); // Buscar apoderado en la DB
+    Apoderados apoderado = apoderadosService.obtenerApoderadosPorId(estudiante.getApoderado().getId()); // Buscar apoderado en la DB
     estudianteAnt.setApoderado(apoderado);
 
     return estudiantesRepository.save(estudianteAnt);

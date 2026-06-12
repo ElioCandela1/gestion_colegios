@@ -34,7 +34,7 @@
 
             <form th:action="@{/apoderados/guardar}" th:object="${apoderado}" method="post">
 
-                <input type="hidden" th:field="*{idApoderado}">
+                <input type="hidden" th:field="*{id}">
 
                 <div class="form-grid">
 
@@ -45,12 +45,12 @@
 
                     <div class="form-group">
                         <label>Nombres</label>
-                        <input type="text" th:field="*{nombre}" placeholder="Ingrese nombres">
+                        <input type="text" th:field="*{nombre}" placeholder="Ingrese nombres" required>
                     </div>
 
                     <div class="form-group">
                         <label>Primer Apellido</label>
-                        <input type="text" th:field="*{primerApellido}" placeholder="Ingrese primer apellido">
+                        <input type="text" th:field="*{primerApellido}" placeholder="Ingrese primer apellido" required>
                     </div>
 
                     <div class="form-group">
@@ -60,7 +60,13 @@
 
                     <div class="form-group">
                         <label>DNI</label>
-                        <input type="text" maxlength="8" th:field="*{dni}" placeholder="12345678">
+                        <input type="text" maxlength="8" th:field="*{dni}" placeholder="12345678" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" name="fechaNacimiento"
+                            th:value="${#temporals.format(apoderado.fechaNacimiento, 'yyyy-MM-dd')}" required>
                     </div>
 
                     <div class="form-group">
@@ -70,7 +76,7 @@
 
                     <div class="form-group">
                         <label>Correo</label>
-                        <input type="email" th:field="*{correo}" placeholder="correo@ejemplo.com">
+                        <input type="email" th:field="*{correo}" placeholder="correo@ejemplo.com" required>
                     </div> 
 
                 </div>
@@ -141,7 +147,7 @@
 
                     <tr th:each="a : ${apoderados}">
 
-                        <td th:text="${a.idApoderado}"></td>
+                        <td th:text="${a.id}"></td>
 
                         <td th:text="${a.nombre}"></td>
 
@@ -155,11 +161,11 @@
 
                         <td>
 
-                            <a th:href="@{/apoderados/editar/{id}(id=${a.idApoderado})}">
+                            <a th:href="@{/apoderados/editar/{id}(id=${a.id})}">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
 
-                            <a th:href="@{/apoderados/eliminar/{id}(id=${a.idApoderado})}"
+                            <a th:href="@{/apoderados/eliminar/{id}(id=${a.id})}"
                                 onclick="return confirm('¿Desea eliminar este apoderado?')">
 
                                 <i class="fa-solid fa-trash"></i>
