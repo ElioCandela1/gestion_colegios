@@ -50,12 +50,16 @@ public class EstudiantesController {
 
     // Mostrar la ventana de Gestion de Estudiantes
     @GetMapping("/gestionEstudiantes")
-    public String mostrarGestionEstudiantes(Model model, @RequestParam(defaultValue = "0") int page) {
+    public String mostrarGestionEstudiantes(Model model, @RequestParam(defaultValue = "0") int page, @ModelAttribute("estudiante") Estudiantes estudiante) {
 
         Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
 
-        Estudiantes estudiante = new Estudiantes();
-    estudiante.setApoderado(new Apoderados());
+        
+    // Solo se inicializa apoderado si el estudiante está vacío
+    if (estudiante.getApoderado() == null) {
+        estudiante.setApoderado(new Apoderados());
+    }
+
     model.addAttribute("estudiante", estudiante);
 
         model.addAttribute("estudiantes", pagina.getContent()); // lista de estudiantes
@@ -67,6 +71,7 @@ public class EstudiantesController {
         return "estudianteform";
     }
 
+    
     // Generar codigo para nuevo estudiante
     @GetMapping("/nuevo")
     public String nuevoEstudiante(RedirectAttributes redirectAttributes, Estudiantes estudiante) {
