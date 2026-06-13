@@ -1,9 +1,12 @@
 package com.sistema_colegios.gestion_colegios.Controller;
 
+import javax.naming.Binding;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Apoderados;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Estudiantes;
@@ -12,8 +15,10 @@ import com.sistema_colegios.gestion_colegios.Model.Service.ApoderadosService;
 import com.sistema_colegios.gestion_colegios.Model.Service.EstudiantesService;
 import com.sistema_colegios.gestion_colegios.Model.Service.GeneradorCodigoEstudiante;
 import com.sistema_colegios.gestion_colegios.Model.Service.MatriculasService;
+import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,6 +50,18 @@ public class EstudiantesController {
     @ModelAttribute("usuarioLogeado")
     public Usuarios usuarioLogeado(HttpSession session) {
         return (Usuarios) session.getAttribute("usuarioLogeado");
+    }
+
+    // Verificación de seguridad temporal
+    @GetMapping
+    public String verificarSession(@ModelAttribute("usuarioLogeado") Usuarios usuarioLogeado) {
+        // Validar si existe sesión activa
+        if (usuarioLogeado == null || usuarioLogeado.getRol() != Rol.ADMIN) {
+            return "redirect:/index";
+        }
+
+        // Si hay sesión activa, mostrar la vista de estudiantes
+        return "estudiantes";
     }
 
     // Mostrar la ventana de Gestion de Estudiantes
@@ -81,9 +98,21 @@ public class EstudiantesController {
 
     // Guardar Estudiante
     @PostMapping("/guardar")
-    public String guardarEstudiante(@ModelAttribute Estudiantes estudiante,
+    public String guardarEstudiante(
+            @ModelAttribute @Valid Estudiantes estudiante,
+            BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             @RequestParam(defaultValue = "0") int page) {
+
+        if (bindingResult.hasErrors()) {
+
+            String mensaje = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", mensaje);
+
+            return "redirect:/estudiantes/gestionEstudiantes";
+        }
 
         // verificar codigo del estudiante
 
@@ -97,7 +126,7 @@ public class EstudiantesController {
 
         Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
 
-        System.out.println("Dni del estudiante: " + estudiante.getDni());
+        
 
         try {
             String guardar = estudiantesService.guardarEstudiante(estudiante);

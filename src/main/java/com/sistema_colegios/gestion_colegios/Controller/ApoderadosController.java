@@ -1,9 +1,12 @@
 package com.sistema_colegios.gestion_colegios.Controller;
 
+import javax.naming.Binding;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +19,10 @@ import com.sistema_colegios.gestion_colegios.Model.Entity.Apoderados;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Service.ApoderadosService;
 import com.sistema_colegios.gestion_colegios.Model.Service.GenerarCodigoApoderado;
+import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/apoderados")
@@ -38,6 +43,18 @@ public class ApoderadosController {
     @ModelAttribute("usuarioLogeado")
     public Usuarios usuarioLogeado(HttpSession session) {
         return (Usuarios) session.getAttribute("usuarioLogeado");
+    }
+
+    // Verificación de seguridad temporal
+    @GetMapping
+    public String verificarSession(@ModelAttribute("usuarioLogeado") Usuarios usuarioLogeado) {
+        // Validar si existe sesión activa
+        if (usuarioLogeado == null || usuarioLogeado.getRol() != Rol.ADMIN) {
+            return "redirect:/index";
+        }
+
+        // Si hay sesión activa, mostrar la vista de docentes
+        return "apoderados";
     }
 
     // Mostrar ventana de Gestion de Apoderados
@@ -64,8 +81,20 @@ public class ApoderadosController {
 
     // Guardar Apoderado
     @PostMapping("/guardar")
-    public String guardarApoderado(@ModelAttribute Apoderados apoderado,
+    public String guardarApoderado(
+        @ModelAttribute @Valid Apoderados apoderado,
+        BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+
+            String mensaje = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", mensaje);
+
+            return "redirect:/apoderados/gestionApoderados";
+        }
 
         try {
             String guardar = apoderadosService.guardarApoderados(apoderado);

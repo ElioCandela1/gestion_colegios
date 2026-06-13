@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -18,26 +19,34 @@ public abstract class Persona extends AuditoriaEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-   @Column(name = "codigo", unique = true, nullable = false)
+    @NotBlank(message = "Debe generar un codigo de usuario")
+    @Column(name = "codigo", unique = true, nullable = false)
     private String codigo;
 
+    @NotBlank(message = "Debe ingresar un nombre de usuario")
     @Column(name = "nombres", nullable = false)
     private String nombre;
 
+    @NotBlank(message = "Debe generar un apellido")
     @Column(name = "primer_apellido", nullable = false)
     private String primerApellido;
 
     @Column(name = "segundo_apellido")
     private String segundoApellido;
 
+    @Size(min = 8, max = 8, message = "El dni debe tener exactamente 8 caracteres")
     @Column(unique = true, nullable = false)
     private String dni;
 
+    @NotNull(message = "Debe ingresar una fecha de nacimiento")
+    @Past(message = "Ingrese una fecha valida")
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
 
     private String telefono;
 
+    @NotBlank(message = "Debe ingresar un correo electrónico")
+    @Email(message = "Debe ingresar un correo correcto ejemplo@ejemplo.com")
     private String correo;
 
     private String direccion;
@@ -102,14 +111,6 @@ public abstract class Persona extends AuditoriaEntity{
     }
 
     public void setDni(String dni) {
-        if (dni == null) {
-            throw new IllegalArgumentException("Debe ingresar un DNI");
-        }
-
-        if (!dni.matches("\\d{8}")) {
-            throw new IllegalArgumentException("El DNI debe contener exactamente 8 dígitos.");
-        }
-
         this.dni = dni;
     }
 

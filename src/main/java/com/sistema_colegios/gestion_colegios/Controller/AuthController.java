@@ -1,5 +1,7 @@
 package com.sistema_colegios.gestion_colegios.Controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +39,7 @@ public class AuthController {
 
         session.setAttribute("usuarioLogeado", usuario);
         // Redirige a otra página después del login exitoso
+        usuario.setUltimoAcceso(LocalDateTime.now());
         return "redirect:/inicio";
     }
 
@@ -46,27 +49,4 @@ public class AuthController {
         return "redirect:/"; // Redirige al login después de cerrar sesión
     }
     
-
-    /*
-     * @PostMapping("/login")
-     * public LoginResponse login(
-     * 
-     * @RequestBody LoginRequest request) {
-     * 
-     * Usuario usuario =
-     * authService.login(
-     * request.getUsername(),
-     * request.getPassword());
-     * 
-     * if (usuario == null) {
-     * throw new RuntimeException(
-     * "Credenciales incorrectas");
-     * }
-     * 
-     * return new LoginResponse(
-     * usuario.getIdUsuario(),
-     * usuario.getUsername(),
-     * usuario.getRol());
-     * }
-     */
 }

@@ -4,11 +4,14 @@ import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
 import com.sistema_colegios.gestion_colegios.Model.Service.UsuarioGenerable;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "docente")
 public class Docentes extends Persona implements UsuarioGenerable {
 
+    @NotEmpty(message = "Debe ingresar una especialidad")
+    @Column(nullable = false)
     private String especialidad;
 
     public Docentes(){

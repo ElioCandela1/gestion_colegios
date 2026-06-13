@@ -4,20 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Docentes;
 import com.sistema_colegios.gestion_colegios.Model.Entity.Usuarios;
 import com.sistema_colegios.gestion_colegios.Model.Service.DocentesService;
 import com.sistema_colegios.gestion_colegios.Model.Service.GeneradorCodigoDocente;
+import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/docentes")
@@ -39,6 +37,18 @@ public class DocentesController {
     @ModelAttribute("usuarioLogeado")
     public Usuarios usuarioLogeado(HttpSession session) {
         return (Usuarios) session.getAttribute("usuarioLogeado");
+    }
+
+    // Verificación de seguridad temporal
+    @GetMapping
+    public String verificarSession(@ModelAttribute("usuarioLogeado") Usuarios usuarioLogeado) {
+        // Validar si existe sesión activa
+        if (usuarioLogeado == null || usuarioLogeado.getRol() != Rol.ADMIN) {
+            return "redirect:/index";
+        }
+
+        // Si hay sesión activa, mostrar la vista de docentes
+        return "docentes";
     }
 
     // Mostrar ventana de Gestion de Apoderados
@@ -65,13 +75,26 @@ public class DocentesController {
 
     // Guardar Docente
     @PostMapping("/guardar")
-    public String guardarDocente(@ModelAttribute Docentes docente,
-            RedirectAttributes redirectAttributes) {
+    public String guardarDocente(
+            @ModelAttribute @Valid Docentes docente,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(defaultValue = "0") int page) {
 
-                System.out.println("Codigo docente ----------------->" + docente.getCodigo());
+        if (bindingResult.hasErrors()) {
+
+            String mensaje = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", mensaje);
+
+            return "redirect:/docentes/gestionDocentes";
+        }
 
         // Validaciones
-        if (docente.getCodigo() == null || docente.getCodigo().isBlank()) {
+        if (docente.getCodigo() == null || docente.getCodigo().isBlank())
+
+        {
             redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
             redirectAttributes.addFlashAttribute("mensaje", "Debe generar un codigo de usuario");
             return "redirect:/docentes/gestionDocentes";

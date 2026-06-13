@@ -3,6 +3,7 @@ package com.sistema_colegios.gestion_colegios.Model.Entity;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "matricula")
@@ -13,22 +14,26 @@ public class Matriculas extends AuditoriaEntity {
     @Column(name = "id_matricula")
     private Integer idMatricula;
 
+    @NotNull(message = "La fecha de matricula es obligatoria")
     @Column(name = "fecha_matricula")
     private LocalDate fechaMatricula;
 
-    private boolean estado;
+    private boolean estado =true;
 
     @Column(name = "anio_escolar")
     private Integer anioEscolar;
 
+    @NotNull(message = "Debe ingresar un estudiante")
     @ManyToOne
     @JoinColumn(name = "id_estudiante")
     private Estudiantes estudiante;
 
+    @NotNull(message = "Debe ingresar una sección")
     @ManyToOne
     @JoinColumn(name = "id_seccion")
     private Secciones seccion;
 
+    @NotNull(message = "Debe ingresar un grado")
     @ManyToOne
     @JoinColumn(name = "id_grado")
     private Grados grado;

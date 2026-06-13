@@ -5,11 +5,13 @@ import com.sistema_colegios.gestion_colegios.Model.Service.Rol;
 import com.sistema_colegios.gestion_colegios.Model.Service.UsuarioGenerable;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "estudiante")
 public class Estudiantes extends Persona implements UsuarioGenerable {
 
+    @NotNull(message = "Debe ingresar un apoderado")
     @ManyToOne
     @JoinColumn(name = "id_apoderado", nullable = false)
     private Apoderados apoderado;

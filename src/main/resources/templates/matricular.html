@@ -33,7 +33,7 @@
 
             <!-- Formulario de búsqueda -->
             <form th:action="@{/matriculas/buscar}" method="get" class="busqueda">
-                <input type="text" name="dni" placeholder="Ingrese DNI del estudiante..." maxlength="8" />
+                <input type="text" name="dni"  id="dniEstudiante" placeholder="Ingrese DNI del estudiante..." maxlength="8" />
                 <button type="submit">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
@@ -146,13 +146,28 @@
                         Cancelar
                     </button>
 
-                    <button type="submit" class="btn guardar">
+                    <button type="submit" id="btnGuardar" class="btn guardar">
                         Guardar
                     </button>
 
                 </div>
 
             </form>
+
+            <script>
+                document.querySelector("form").addEventListener("submit", function (e) {
+
+                    if (e.submitter && e.submitter.id === "btnGuardar") {
+
+                        let dniEstudiante = document.getElementById("dniEstudiante").value;
+
+                        if (dniEstudiante === "0" || dniEstudiante === "" || dniEstudiante === null) {
+                            e.preventDefault();
+                            alert("Debe buscar un estudiante");
+                        }
+                    }
+                });
+            </script>
 
         </div>
 
@@ -170,8 +185,8 @@
                 <div class="filtro">
                     <select name="anioEscolar" onchange="this.form.submit()">
                         <option value="">Todos los años</option>
-                        <option th:each="a:${anios}" th:value="${a}"
-                            th:text="${a}" th:selected="${a == anioSeleccionado}">
+                        <option th:each="a:${anios}" th:value="${a}" th:text="${a}"
+                            th:selected="${a == anioSeleccionado}">
                         </option>
                     </select>
 

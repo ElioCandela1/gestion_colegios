@@ -41,16 +41,20 @@
                         <label>Codigo</label>
                         <input type="text" id="codigo" th:field="*{codigo}" class="form-control"
                             placeholder="Haga click en el botón nuevo para generar" readonly />
+                        <p class="texto-alerta" th:if="${#fields.hasErrors('codigo')}" th:errors="*{mensaje}">
+                        </p>
                     </div>
 
                     <div class="form-group">
                         <label>Nombres</label>
                         <input type="text" th:field="*{nombre}" required>
+                        <p class="texto-alerta" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
                     </div>
 
                     <div class="form-group">
                         <label>Primer Apellido</label>
                         <input type="text" th:field="*{primerApellido}" required>
+                        <p class="texto-alerta" th:if="${#fields.hasErrors('primerApellido')}" th:errors="*{primerApellido}"></p>
                     </div>
 
                     <div class="form-group">
@@ -61,12 +65,14 @@
                     <div class="form-group">
                         <label>DNI</label>
                         <input type="text" maxlength="8" th:field="*{dni}" required>
+                        <p class="texto-alerta" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></p>
                     </div>
 
                     <div class="form-group">
                         <label>Fecha de Nacimiento</label>
                         <input type="date" name="fechaNacimiento"
                             th:value="${#temporals.format(docente.fechaNacimiento, 'yyyy-MM-dd')}" required>
+                            <p class="texto-alerta" th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}"></p>
                     </div>
 
                     <!-- <div class="form-group">
@@ -87,6 +93,7 @@
                             <option value="ingles">Inglés</option>
                             <option value="religion">Religión / Valores</option>
                         </select>
+                        <p class="texto-alerta" th:if="${#fields.hasErrors('especialidad')}" th:errors="*{especialidad}"></p>
                     </div>
 
                     <div class="form-group">
@@ -97,6 +104,7 @@
                     <div class="form-group">
                         <label>Correo</label>
                         <input type="email" th:field="*{correo}" required>
+                        <p class="texto-alerta" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></p>
                     </div>
 
 

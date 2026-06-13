@@ -20,9 +20,10 @@ public class ApoderadosService {
     private ApoderadosRepository apoderadosRepository;
     @Autowired
     private AuditorAware<Usuarios> auditorAware;
-    private UsuariosService usuariosService;
     @Autowired
     private EmailService emailService;
+    @Autowired 
+    private UsuariosService usuariosService;
 
     public String guardarApoderados(Apoderados apoderado) {
 
