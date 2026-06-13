@@ -71,6 +71,7 @@ public class EstudiantesService {
         } 
 
         // No existe el estudiante, guardar uno nuevo
+        System.out.println("Codigo de estudiante: " + estudiante.getCodigo());
         estudiantesRepository.save(estudiante);
         Usuarios usuario = new Usuarios();
         usuariosService.crearUsuario(estudiante, estudiante);

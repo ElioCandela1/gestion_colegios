@@ -33,10 +33,12 @@ public class ApoderadosService {
         try {
             apoderadoExistente = obtenerApoderadosPorDni(apoderado.getDni());
         } catch (Exception e) {
+            apoderadoExistente = null;
         }
 
-        // En caso se exista el apoderado se verifica si estaba eliminado o activo
+        // En caso si exista el apoderado se verifica si estaba eliminado o activo
         if (apoderadoExistente != null) {
+
             if (apoderadoExistente.isEstadoRegistro()) {
 
                 // Se actualizan los datos del apoderado
@@ -53,18 +55,9 @@ public class ApoderadosService {
                 // Existe pero estaba eliminado, reactivar
                 apoderadoExistente.setEstadoRegistro(true);
                 copiarDatos(apoderado, apoderadoExistente);
-                /*
-                 * apoderadoExistente.setNombre(apoderado.getNombre());
-                 * apoderadoExistente.setPrimerApellido(apoderado.getPrimerApellido());
-                 * apoderadoExistente.setSegundoApellido(apoderado.getSegundoApellido());
-                 * apoderadoExistente.setDni(apoderado.getDni());
-                 * apoderadoExistente.setTelefono(apoderado.getTelefono());
-                 * apoderadoExistente.setCorreo(apoderado.getCorreo());
-                 * apoderadoExistente.setParentesco(apoderado.getParentesco());
-                 */
-
                 apoderadosRepository.save(apoderadoExistente);
 
+                //Se reenvian las credenciales por correo
             Usuarios user = usuariosService.obtenerUsuarioPorIdPersona(apoderadoExistente.getId());
             emailService.enviarCredenciales(apoderadoExistente.getCorreo(), user.getUsername() , null);
 
@@ -76,6 +69,7 @@ public class ApoderadosService {
         // No existe el apoderado, guardar uno nuevo
         apoderadosRepository.save(apoderado);
 
+        //Se crea un usuario y se envían las credenciales por correo
         Usuarios usuario = new Usuarios();
         usuariosService.crearUsuario(apoderado, apoderado);
         usuario.setPersona(apoderado);
@@ -148,6 +142,5 @@ public class ApoderadosService {
         destino.setDni(origen.getDni());
         destino.setTelefono(origen.getTelefono());
         destino.setCorreo(origen.getCorreo());
-        // destino.setParentesco(origen.getParentesco());
     }
 }

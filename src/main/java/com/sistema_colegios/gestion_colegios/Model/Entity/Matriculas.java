@@ -38,11 +38,9 @@ public class Matriculas extends AuditoriaEntity {
     @JoinColumn(name = "id_grado")
     private Grados grado;
 
-    public Matriculas() {
-    }
+    public Matriculas() {   }
 
-    public Matriculas(LocalDate fechaMatricula, boolean estado, Integer anioEscolar, Estudiantes estudiante,
-            Secciones seccion, Grados grado) {
+    public Matriculas(LocalDate fechaMatricula, boolean estado, Integer anioEscolar, Estudiantes estudiante, Secciones seccion, Grados grado) {
         this.fechaMatricula = fechaMatricula;
         this.estado = estado;
         this.anioEscolar = anioEscolar;

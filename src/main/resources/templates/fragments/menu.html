@@ -11,14 +11,14 @@
                 <!-- Texto centrado -->
                 <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="90"
                     font-weight="lighter" fill="white"
-                    th:text="${session.usuarioLogrado == null ? '?' :#strings.substring(session.usuarioLogeado.persona.nombre.toUpperCase(),0,1)}">
+                    th:text="${session.usuarioLogeado == null ? '?' : #strings.substring(session.usuarioLogeado.persona.nombre.toUpperCase(),0,1)}">
                 </text>
             </svg>
             <figcaption>Icono o foto de usuario logeado</figcaption>
         </figure>
 
-        <p th:text="${session.usuarioLogeado.persona.nombre + ' ' + session.usuarioLogeado.persona.primerApellido}"></p>
-        <p th:text="${session.usuarioLogeado.rol}"></p>
+        <p th:text="${session.usuarioLogeado == null ? '???' : session.usuarioLogeado.persona.nombre + ' ' + session.usuarioLogeado.persona.primerApellido}"></p>
+        <p th:text="${session.usuarioLogeado == null ? '???' : session.usuarioLogeado.rol}"></p>
 
     </div>
 

@@ -128,20 +128,6 @@ public class MatricularEstudianteController {
                                         matricula.getEstudiante().getDni(),
                                         matricula);
 
-                        /*
-                         * if (matricular.equals("YA_MATRICULADO")) {
-                         * model.addAttribute("tipoModal", "confirmacion");
-                         * model.addAttribute("mensaje",
-                         * "El estudiante ya está matriculado. ¿Desea editar la matrícula?");
-                         * //int idMatriculaExistente =
-                         * matriculasService.obtenerMatriculaPorEstudiante(matricula.getEstudiante());
-                         * model.addAttribute("idMatricula", matricula.getIdMatricula());
-                         * } else {
-                         * model.addAttribute("tipoModal", "notificación");
-                         * model.addAttribute("mensaje", matricular);
-                         * }
-                         */
-
                         redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
                         redirectAttributes.addFlashAttribute("mensaje", matricular);
 
@@ -150,8 +136,6 @@ public class MatricularEstudianteController {
                         redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
                         redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
                 }
-
-                // redirectAttributes.addFlashAttribute("matricula", matricula);
 
                 return "redirect:/matriculas/matricular";
         }
@@ -220,21 +204,15 @@ public class MatricularEstudianteController {
 
                         Matriculas matricula;
 
-                        Optional<Matriculas> existente = matriculasService.obtenerEstudiantesMatriculadosPorAño(
-                                        estudiante,
-                                        anioActual);
+                        Optional<Matriculas> existente = matriculasService.obtenerEstudiantesMatriculadosPorAño(estudiante, anioActual);
 
-                        if (existente.isPresent() &&
-                                        existente.get().isEstadoRegistro()) {
+                        if (existente.isPresent() && existente.get().isEstadoRegistro()) {
 
                                 matricula = existente.get();
 
-                                redirectAttributes.addFlashAttribute(
-                                                "tipoModal",
-                                                "confirmacion");
+                                redirectAttributes.addFlashAttribute("tipoModal", "confirmacion");
 
-                                redirectAttributes.addFlashAttribute(
-                                                "mensaje",
+                                redirectAttributes.addFlashAttribute("mensaje",
                                                 "El estudiante ya está matriculado. ¿Desea editar la matrícula?");
 
                         } else {
@@ -243,19 +221,13 @@ public class MatricularEstudianteController {
                                 matricula.setEstudiante(estudiante);
                         }
 
-                        redirectAttributes.addFlashAttribute(
-                                        "matricula",
-                                        matricula);
+                        redirectAttributes.addFlashAttribute("matricula", matricula);
 
                 } catch (RuntimeException e) {
 
-                        redirectAttributes.addFlashAttribute(
-                                        "tipoModal",
-                                        "notificacion");
+                        redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
 
-                        redirectAttributes.addFlashAttribute(
-                                        "mensaje",
-                                        e.getMessage());
+                        redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
                 }
 
                 return "redirect:/matriculas/matricular";

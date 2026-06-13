@@ -1,18 +1,11 @@
 package com.sistema_colegios.gestion_colegios.Controller;
 
-import javax.naming.Binding;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sistema_colegios.gestion_colegios.Model.Entity.Apoderados;
@@ -45,18 +38,6 @@ public class ApoderadosController {
         return (Usuarios) session.getAttribute("usuarioLogeado");
     }
 
-    // Verificación de seguridad temporal
-    @GetMapping
-    public String verificarSession(@ModelAttribute("usuarioLogeado") Usuarios usuarioLogeado) {
-        // Validar si existe sesión activa
-        if (usuarioLogeado == null || usuarioLogeado.getRol() != Rol.ADMIN) {
-            return "redirect:/index";
-        }
-
-        // Si hay sesión activa, mostrar la vista de docentes
-        return "apoderados";
-    }
-
     // Mostrar ventana de Gestion de Apoderados
     @GetMapping("/gestionApoderados")
     public String motrarVistaApoderado(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -82,10 +63,11 @@ public class ApoderadosController {
     // Guardar Apoderado
     @PostMapping("/guardar")
     public String guardarApoderado(
-        @ModelAttribute @Valid Apoderados apoderado,
-        BindingResult bindingResult,
+            @ModelAttribute @Valid Apoderados apoderado,
+            BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
 
+        //Validación de formularios
         if (bindingResult.hasErrors()) {
 
             String mensaje = bindingResult.getAllErrors().get(0).getDefaultMessage();
@@ -96,6 +78,7 @@ public class ApoderadosController {
             return "redirect:/apoderados/gestionApoderados";
         }
 
+        //Guardar datos
         try {
             String guardar = apoderadosService.guardarApoderados(apoderado);
 
@@ -112,7 +95,8 @@ public class ApoderadosController {
 
     // Editar apoderado
     @GetMapping("/editar/{id}")
-    public String editarDatosApoderado(RedirectAttributes redirectAttributes,
+    public String editarDatosApoderado(
+            RedirectAttributes redirectAttributes,
             @ModelAttribute Apoderados apoderado,
             @PathVariable Integer id) {
 
@@ -124,21 +108,19 @@ public class ApoderadosController {
         }
 
         redirectAttributes.addFlashAttribute("apoderado", apoderado);
-        // redirectAttributes.addFlashAttribute("pagina", pagina);
-        // redirectAttributes.addFlashAttribute("apoderados", pagina.getContent());
-
+        
         return "redirect:/apoderados/gestionApoderados";
     }
 
     // Buscar apoderado
     @GetMapping("/buscar")
-    public String buscarApoderado(@RequestParam String dni,
+    public String buscarApoderado(
+            @RequestParam String dni,
             Model model,
             @RequestParam(defaultValue = "0") int page) {
 
         Page<Apoderados> pagina = apoderadosService.obtenerApoderadosPorDniPage(dni, page);
 
-        System.out.println(pagina.getContent());
         model.addAttribute("apoderados", pagina.getContent());
         model.addAttribute("pagina", pagina);
 
@@ -148,19 +130,19 @@ public class ApoderadosController {
     // Eliminar apoderado (Soft Delete)
     @GetMapping("/eliminar/{id}")
     public String eliminarApoderado(@PathVariable Integer id,
-            RedirectAttributes redirectAttributes) {
-
-        String mensaje = new String();
+            RedirectAttributes redirectAttributes) {    
 
         try {
-            mensaje = apoderadosService.eliminarApoderados(id);
+            String mensaje = apoderadosService.eliminarApoderados(id);
+            redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+            redirectAttributes.addFlashAttribute("mensaje", mensaje);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
         }
 
-        redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
-        redirectAttributes.addFlashAttribute("mensaje", mensaje);
+        //redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
+        //redirectAttributes.addFlashAttribute("mensaje", mensaje);
         return "redirect:/apoderados/gestionApoderados";
     }
 

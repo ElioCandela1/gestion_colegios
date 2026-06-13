@@ -125,18 +125,18 @@
             </form>
 
             <script>
-                document.querySelector("form").addEventListener("submit", function(e) {
+                document.querySelector("form").addEventListener("submit", function (e) {
 
-    if (e.submitter && e.submitter.id === "btnGuardar") {
+                    if (e.submitter && e.submitter.id === "btnGuardar") {
 
-        let idApoderado = document.getElementById("idApoderado").value;
+                        let idApoderado = document.getElementById("idApoderado").value;
 
-        if (idApoderado === "0" || idApoderado === "") {
-            e.preventDefault();
-            alert("Debe seleccionar un apoderado");
-        }
-    }
-});
+                        if (idApoderado === "0" || idApoderado === "") {
+                            e.preventDefault();
+                            alert("Debe seleccionar un apoderado");
+                        }
+                    }
+                });
             </script>
 
         </section>
@@ -252,7 +252,7 @@
 
                 <!-- Siguiente -->
                 <a th:if="${pagina.hasNext()}" th:href="@{/estudiantes/gestionEstudiantes(
-        page=${pagina.number + 1})}">
+                page=${pagina.number + 1})}">
                     Siguiente →
                 </a>
 

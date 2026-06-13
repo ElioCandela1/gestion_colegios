@@ -13,10 +13,7 @@ public class Administrador extends Persona {
 
 
 
-    public Administrador(String cargo, String area) {
-        this.cargo = cargo;
-        this.area = area;
-    }
+    public Administrador(String cargo, String area) {this.cargo = cargo; this.area = area; }
 
     public Administrador(int id, String codigo, String nombre, String primerApellido, String segundoApellido,
             String dni, String telefono, String correo, String cargo, String area) {
@@ -25,9 +22,7 @@ public class Administrador extends Persona {
         this.area = area;
     }
 
-    public Administrador() {
-        //TODO Auto-generated constructor stub
-    }
+    public Administrador() {    }
 
     public String getCargo() {
         return cargo;

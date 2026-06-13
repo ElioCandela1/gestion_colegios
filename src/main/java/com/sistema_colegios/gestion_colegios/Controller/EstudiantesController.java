@@ -77,13 +77,9 @@ public class EstudiantesController {
         }
 
         model.addAttribute("estudiante", estudiante);
-
         model.addAttribute("estudiantes", pagina.getContent()); // lista de estudiantes
-        // model.addAttribute("paginaActual", page);
-        // model.addAttribute("totalPaginas", pagina.getTotalPages());
         model.addAttribute("pagina", pagina);
-        // model.addAttribute("estudiantes", estudiantesService.listarEstudiantes());
-        // model.addAttribute("apoderados", apoderadosService.listarApoderados());
+
         return "estudianteform";
     }
 
@@ -123,11 +119,7 @@ public class EstudiantesController {
             redirectAttributes.addFlashAttribute(estudiante);
             return "redirect:/estudiantes/gestionEstudiantes";
         }
-
-        Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
-
         
-
         try {
             String guardar = estudiantesService.guardarEstudiante(estudiante);
 
@@ -138,6 +130,8 @@ public class EstudiantesController {
             redirectAttributes.addFlashAttribute("tipoModal", "notificacion");
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
         }
+
+        Page<Estudiantes> pagina = estudiantesService.listarEstudiantesActivos(page);
 
         redirectAttributes.addFlashAttribute("pagina", pagina);
         redirectAttributes.addFlashAttribute("estudiantes", pagina.getContent());
