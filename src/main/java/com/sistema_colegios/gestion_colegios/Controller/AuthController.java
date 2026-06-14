@@ -34,7 +34,7 @@ public class AuthController {
 
         if (usuario == null) {
             model.addAttribute("error", "Credenciales incorrectas");
-            return "index"; // vuelve al formulario
+            return "Index"; // vuelve al formulario
         }
 
         session.setAttribute("usuarioLogeado", usuario);
